@@ -1,0 +1,48 @@
+﻿{
+  "type": "Area",
+  "name": "data-form",
+  "childs": [
+    {
+      "key": "any",
+      "controls": [
+        {
+          "type": "Input",
+          "name": "name-field",
+          "label": "Name"
+        },
+        {
+          "type": "Input",
+          "name": "password-field",
+          "label": "Password"
+        },
+        {
+          "type": "CheckBox",
+          "name": "save-password",
+          "text": "Save Password",
+          "childs": [
+            {
+              "key": "any",
+              "controls": [
+                {
+                  "type": "Date",
+                  "name": "date",
+                  "label": "Date to forget"
+                }
+              ]
+            },
+            {
+              "key": "1",
+              "controls": [
+                {
+                  "type": "Input",
+                  "name": "add-field",
+                  "label": "Time"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

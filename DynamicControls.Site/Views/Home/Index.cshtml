@@ -1,0 +1,17 @@
+﻿@using DynamicControls
+@model dynamic
+
+@{
+    ViewBag.Title = "Dynamic Controls";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dynamic Controls</h2>
+
+@Html.DynamicControls(File.ReadAllText(@"controls.json"))
+
+@section script
+{
+    <script src="~/Scripts/dynamic.js"></script>
+    <script src="~/Scripts/dynamic.bootstrap.js"></script>
+}
