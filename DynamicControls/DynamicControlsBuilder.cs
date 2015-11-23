@@ -29,7 +29,7 @@ namespace DynamicControls
         public DynamicControlsBuilder RegisterDataSourceDelegate(DataSourceDelegate dataSourceDelegate, params string[] additionalProperties)
         {
             HttpContext.Current.Session[DataSourceDelegateKey] = dataSourceDelegate;
-            HttpContext.Current.Session["AdditionalProperties"] = additionalProperties;
+            HttpContext.Current.Session[AdditionalPropertiesKey] = additionalProperties;
             return this;
         }
 
