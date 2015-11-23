@@ -37,7 +37,19 @@
                   "type": "Select",
                   "name": "select-field",
                   "dataSource": "121",
-                  "label": "Time"
+                  "label": "Time",
+                  "childs": [
+                    {
+                      "key": "2",
+                      "controls": [
+                        {
+                          "type": "Input",
+                          "name": "third-input",
+                          "label": "Count"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }

@@ -8,11 +8,15 @@ namespace DynamicControls.Controls
         protected override TagBuilder CreateControl()
         {
             var builder = new TagBuilder("select");
-            BuildDataSource(builder);
+            if (HasChilds)
+            {
+                builder.Attributes.Add("onchange", "selectChange(this);");
+            }
+            BindDataSource(builder);
             return builder;
         }
 
-        protected override void BuildDataSource(TagBuilder builder)
+        protected override void BindDataSource(TagBuilder builder)
         {
             foreach (KeyValuePair<string, string> pair in GetDataSource())
             {

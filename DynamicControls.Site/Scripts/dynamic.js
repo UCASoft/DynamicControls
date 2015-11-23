@@ -11,6 +11,12 @@ function checkBoxChange(checkBox) {
     loadChilds(control.attr("id"), checkBox.checked ? 1 : 0, control.children(".child-panel"));
 }
 
+function selectChange(select) {
+    var $select = $(select);
+    var control = $select.closest(".dynamic-control");
+    loadChilds(control.attr("id"), $select.val(), control.children(".child-panel"));
+}
+
 function dateChange(date) {
     
 }

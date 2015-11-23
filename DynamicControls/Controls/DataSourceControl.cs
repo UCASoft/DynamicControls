@@ -6,7 +6,7 @@ namespace DynamicControls.Controls
 {
     public abstract class DataSourceControl<T> : LabeledControl<T> where T : BaseControl, new()
     {
-        protected abstract void BuildDataSource(TagBuilder builder);
+        protected abstract void BindDataSource(TagBuilder builder);
 
         protected DynamicDataSource GetDataSource()
         {
