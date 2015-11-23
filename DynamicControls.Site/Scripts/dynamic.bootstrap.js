@@ -22,16 +22,21 @@ function prepareDynamicControl(control) {
         if ($this.hasClass("label-element")) {
             $this.addClass("control-label");
         } else if ($this.hasClass("work-element")) {
-            if ($this.attr("type") === "checkbox") {
-                var parent = $this.closest(".form-group");
-                parent.removeClass("form-group").addClass("checkbox");
-                var label = $("<label/>");
-                label.append($this);
-                var span = parent.children("span");
-                label.append(span.text());
-                span.remove();
-                parent.append(label);
-            } else {
+            switch ($this[0].tagName.toLowerCase()) {
+            case "input":
+                if ($this.attr("type") === "checkbox") {
+                    var parent = $this.closest(".form-group");
+                    parent.removeClass("form-group").addClass("checkbox");
+                    var label = $("<label/>");
+                    label.append($this);
+                    var span = parent.children("span");
+                    label.append(span.text());
+                    span.remove();
+                    parent.append(label);
+                    break;
+                }
+            case "select":
+            default:
                 $this.addClass("form-control");
             }
         }

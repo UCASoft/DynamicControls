@@ -1,6 +1,23 @@
 ﻿@using DynamicControls
 @model dynamic
 
+@functions {
+
+    private DynamicDataSource DataSourceDelegate(string name, Dictionary<string, string> additionalParameters)
+    {
+        DynamicDataSource result = new DynamicDataSource();
+        if (name.Equals("select-field"))
+        {
+            result.Add("0", "Day");
+            result.Add("1", "Week");
+            result.Add("2", "Month");
+            result.Add("3", "Year");
+        }
+        result.Add(additionalParameters.First().Key, additionalParameters.First().Value);
+        return result;
+    }
+}
+
 @{
     ViewBag.Title = "Dynamic Controls";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,7 +25,7 @@
 
 <h2>Dynamic Controls</h2>
 
-@Html.DynamicControls(File.ReadAllText(@"controls.json"))
+@(Html.DynamicControls(File.ReadAllText(@"controls.json")).RegisterDataSourceDelegate(DataSourceDelegate, "dataSource"))
 
 @section script
 {

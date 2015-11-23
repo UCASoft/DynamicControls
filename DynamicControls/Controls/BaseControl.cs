@@ -10,7 +10,6 @@ namespace DynamicControls.Controls
     {
         protected JObject Data { get; private set; }
 
-        protected string Type { get; private set; }
         protected internal string Name { get; private set; }
 
         protected bool HasChilds
@@ -21,14 +20,13 @@ namespace DynamicControls.Controls
         public void Build(JObject control)
         {
             Data = control;
-            Type = control.Value<string>("type");
             Name = control.Value<string>("name");
         }
 
         public static IDynamicControl CreateControl(JObject control)
         {
             string typeName = string.Format("DynamicControls.Controls.{0}Control", control.Value<string>("type"));
-            IDynamicControl renderControl = Activator.CreateInstance(System.Type.GetType(typeName, true)) as IDynamicControl;
+            IDynamicControl renderControl = Activator.CreateInstance(Type.GetType(typeName, true)) as IDynamicControl;
             if (renderControl != null)
             {
                 renderControl.Build(control);
@@ -99,10 +97,7 @@ namespace DynamicControls.Controls
                 JArray controls = valueChilds.Value<JArray>("controls");
                 if (controls != null)
                 {
-                    foreach (JObject control in controls)
-                    {
-                        childsRender += CreateControl(control).Render();
-                    }
+                    childsRender = controls.Values<JObject>().Aggregate(childsRender, (current, control) => current + CreateControl(control).Render());
                 }
                 else
                     throw new MissingControlsException();

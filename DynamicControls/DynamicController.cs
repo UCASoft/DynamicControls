@@ -10,7 +10,7 @@ namespace DynamicControls
     {
         public HtmlString GetChilds(string areaName, string parentName, string parentValue)
         {
-            JObject areaControl = Session[DynamicHelperExtended.GetAraeTempDataKey(areaName)] as JObject;
+            JObject areaControl = Session[DynamicControlsBuilder.GetAraeTempDataKey(areaName)] as JObject;
             if (areaControl != null)
             {
                 JObject requestControl = areaControl.SelectToken(String.Format("$.childs..controls[?(@.name == '{0}')]", parentName)) as JObject;

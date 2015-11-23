@@ -34,8 +34,9 @@
               "key": "1",
               "controls": [
                 {
-                  "type": "Input",
-                  "name": "add-field",
+                  "type": "Select",
+                  "name": "select-field",
+                  "dataSource": "121",
                   "label": "Time"
                 }
               ]

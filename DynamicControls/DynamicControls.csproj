@@ -77,13 +77,17 @@
     <Compile Include="Controls\BaseControl.cs" />
     <Compile Include="Controls\AreaControl.cs" />
     <Compile Include="Controls\CheckBoxControl.cs" />
+    <Compile Include="Controls\DataSourceControl.cs" />
     <Compile Include="Controls\DateControl.cs" />
     <Compile Include="Controls\IDynamicControl.cs" />
     <Compile Include="Controls\IDynamicRenderControl.cs" />
     <Compile Include="Controls\InputControl.cs" />
     <Compile Include="Controls\LabeledControl.cs" />
     <Compile Include="Controls\SelectControl.cs" />
+    <Compile Include="DataSourceDelegate.cs" />
     <Compile Include="DynamicController.cs" />
+    <Compile Include="DynamicControlsBuilder.cs" />
+    <Compile Include="DynamicDataSource.cs" />
     <Compile Include="DynamicHelperExtended.cs" />
     <Compile Include="Exceptions\InvalidInputData.cs" />
     <Compile Include="Exceptions\InvalidTypeException.cs" />
