@@ -5,25 +5,24 @@ namespace DynamicControls.Controls
 {
     public class SelectControl : DataSourceControl<SelectControl>
     {
-        protected override TagBuilder CreateControl()
+        protected override TagBuilder CreateDataSourceControl()
         {
             var builder = new TagBuilder("select");
             if (HasChilds)
             {
                 builder.Attributes.Add("onchange", "selectChange(this);");
             }
-            BindDataSource(builder);
             return builder;
         }
 
-        protected override void BindDataSource(TagBuilder builder)
+        protected override void BindDataSource(TagBuilder control, DynamicDataSource dataSource)
         {
-            foreach (KeyValuePair<string, string> pair in GetDataSource())
+            foreach (KeyValuePair<string, string> pair in dataSource)
             {
                 TagBuilder option = new TagBuilder("option");
                 option.Attributes.Add("value", pair.Key);
                 option.SetInnerText(pair.Value);
-                builder.InnerHtml += option.ToString();
+                control.InnerHtml += option.ToString();
             }
         }
     }

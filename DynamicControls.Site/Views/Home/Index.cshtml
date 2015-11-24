@@ -12,8 +12,13 @@
             result.Add("1", "Week");
             result.Add("2", "Month");
             result.Add("3", "Year");
+            result.Add(additionalParameters.First().Key, additionalParameters.First().Value);
         }
-        result.Add(additionalParameters.First().Key, additionalParameters.First().Value);
+        else if (name.Equals("radio-list"))
+        {
+            result.Add("0", "New");
+            result.Add("1", "Old");
+        }
         return result;
     }
 }

@@ -43,9 +43,9 @@
                       "key": "2",
                       "controls": [
                         {
-                          "type": "Input",
-                          "name": "third-input",
-                          "label": "Count"
+                          "type": "RadioList",
+                          "name": "radio-list",
+                          "label": "Content"
                         }
                       ]
                     }

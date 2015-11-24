@@ -23,6 +23,20 @@ function prepareDynamicControl(control) {
             $this.addClass("control-label");
         } else if ($this.hasClass("work-element")) {
             switch ($this[0].tagName.toLowerCase()) {
+            case "div":
+                if ($this.hasClass("radio-list")) {
+                    $this.children("input").each(function() {
+                        var input = $(this);
+                        var span = input.next("span");
+                        input.wrap($("<label/>"));
+                        var label = input.closest("label");
+                        label.append(span.text());
+                        span.remove();
+                        label.wrap($("<div class='radio'/>"));
+                    });
+                    $this.children("br").remove();
+                }
+                break;
             case "input":
                 if ($this.attr("type") === "checkbox") {
                     var parent = $this.closest(".form-group");

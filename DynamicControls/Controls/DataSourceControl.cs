@@ -6,13 +6,22 @@ namespace DynamicControls.Controls
 {
     public abstract class DataSourceControl<T> : LabeledControl<T> where T : BaseControl, new()
     {
-        protected abstract void BindDataSource(TagBuilder builder);
+        protected override TagBuilder CreateControl()
+        {
+            TagBuilder control = CreateDataSourceControl();
+            BindDataSource(control, GetDataSource());
+            return control;
+        }
 
-        protected DynamicDataSource GetDataSource()
+        protected abstract TagBuilder CreateDataSourceControl();
+
+        protected abstract void BindDataSource(TagBuilder control, DynamicDataSource dataSource);
+
+        private DynamicDataSource GetDataSource()
         {
             DataSourceDelegate dataSourceDelegate = HttpContext.Current.Session[DynamicControlsBuilder.DataSourceDelegateKey] as DataSourceDelegate;
             if (dataSourceDelegate != null)
-            {                
+            {
                 Dictionary<string, string> additionalParameters = new Dictionary<string, string>();
                 string[] additionalProperties = HttpContext.Current.Session[DynamicControlsBuilder.AdditionalPropertiesKey] as string[];
                 if (additionalProperties != null)
