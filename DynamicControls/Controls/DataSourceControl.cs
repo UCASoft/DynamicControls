@@ -9,13 +9,13 @@ namespace DynamicControls.Controls
         protected override TagBuilder CreateControl()
         {
             TagBuilder control = CreateDataSourceControl();
-            BindDataSource(control, GetDataSource());
+            BindDataSource(control, GetDataSource(), DefaulValue);
             return control;
         }
 
         protected abstract TagBuilder CreateDataSourceControl();
 
-        protected abstract void BindDataSource(TagBuilder control, DynamicDataSource dataSource);
+        protected abstract void BindDataSource(TagBuilder control, DynamicDataSource dataSource, string defaultValue);
 
         private DynamicDataSource GetDataSource()
         {

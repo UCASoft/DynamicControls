@@ -17,10 +17,13 @@ namespace DynamicControls.Controls
             get { return Data.Value<JArray>("childs") != null; }
         }
 
+        protected string DefaulValue { get; private set; }
+
         public void Build(JObject control)
         {
             Data = control;
             Name = control.Value<string>("name");
+            DefaulValue = control.Value<string>("defaultValue");
         }
 
         public static IDynamicControl CreateControl(JObject control)
@@ -56,7 +59,7 @@ namespace DynamicControls.Controls
             if (HasChilds)
             {
                 TagBuilder childPanel = CreateChildPanel();
-                childPanel.InnerHtml += RenderChilds(String.Empty);
+                childPanel.InnerHtml += RenderChilds(DefaulValue);
                 builder.InnerHtml += childPanel.ToString();
             }
             return builder.ToString();

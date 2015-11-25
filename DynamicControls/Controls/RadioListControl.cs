@@ -13,7 +13,7 @@ namespace DynamicControls.Controls
             return control;
         }
 
-        protected override void BindDataSource(TagBuilder control, DynamicDataSource dataSource)
+        protected override void BindDataSource(TagBuilder control, DynamicDataSource dataSource, string defaultValue)
         {
             KeyValuePair<string, string> lastPair = dataSource.Last();
             foreach (KeyValuePair<string, string> pair in dataSource)
@@ -22,6 +22,8 @@ namespace DynamicControls.Controls
                 input.Attributes.Add("type", "radio");
                 input.Attributes.Add("name", Name);
                 input.Attributes.Add("value", pair.Key);
+                if (pair.Key.Equals(defaultValue))
+                    input.Attributes.Add("checked", "checked");
                 control.InnerHtml += input.ToString();
                 TagBuilder span = new TagBuilder("span");
                 span.SetInnerText(pair.Value);
