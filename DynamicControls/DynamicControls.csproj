@@ -79,6 +79,7 @@
     <Compile Include="Controls\CheckBoxControl.cs" />
     <Compile Include="Controls\DataSourceControl.cs" />
     <Compile Include="Controls\DateControl.cs" />
+    <Compile Include="Controls\HtmlBoxControl.cs" />
     <Compile Include="Controls\IDynamicControl.cs" />
     <Compile Include="Controls\IDynamicRenderControl.cs" />
     <Compile Include="Controls\InputControl.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Exceptions\InvalidInputData.cs" />
     <Compile Include="Exceptions\InvalidTypeException.cs" />
     <Compile Include="Exceptions\MissingControlsException.cs" />
+    <Compile Include="Exceptions\UseLibraryKeyException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

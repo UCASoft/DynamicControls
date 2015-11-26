@@ -4,19 +4,55 @@ using System.Web.Mvc;
 
 namespace DynamicControls.Controls
 {
+    /// <summary>
+    /// The data source control.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The type instance of BaseControl.
+    /// </typeparam>
     public abstract class DataSourceControl<T> : LabeledControl<T> where T : BaseControl, new()
     {
+        /// <summary>
+        /// The create control.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="TagBuilder"/>.
+        /// </returns>
         protected override TagBuilder CreateControl()
         {
             TagBuilder control = CreateDataSourceControl();
-            BindDataSource(control, GetDataSource(), DefaulValue);
+            BindDataSource(control, GetDataSource(), this.DefaultValue);
             return control;
         }
 
+        /// <summary>
+        /// The create data source control.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="TagBuilder"/>.
+        /// </returns>
         protected abstract TagBuilder CreateDataSourceControl();
 
+        /// <summary>
+        /// The bind data source.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="dataSource">
+        /// The data source.
+        /// </param>
+        /// <param name="defaultValue">
+        /// The default value.
+        /// </param>
         protected abstract void BindDataSource(TagBuilder control, DynamicDataSource dataSource, string defaultValue);
 
+        /// <summary>
+        /// The get data source.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="DynamicDataSource"/>.
+        /// </returns>
         private DynamicDataSource GetDataSource()
         {
             DataSourceDelegate dataSourceDelegate = HttpContext.Current.Session[DynamicControlsBuilder.DataSourceDelegateKey] as DataSourceDelegate;

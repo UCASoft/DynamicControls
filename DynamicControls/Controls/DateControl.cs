@@ -2,8 +2,17 @@
 
 namespace DynamicControls.Controls
 {
+    /// <summary>
+    /// The date control.
+    /// </summary>
     public class DateControl : InputControl
     {
+        /// <summary>
+        /// The create control.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="TagBuilder"/>.
+        /// </returns>
         protected override TagBuilder CreateControl()
         {
             TagBuilder control = base.CreateControl();

@@ -2,8 +2,20 @@
 
 namespace DynamicControls.Controls
 {
+    /// <summary>
+    /// The labeled control.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The type instance of BaseControl.
+    /// </typeparam>
     public abstract class LabeledControl<T> : BaseControl<T> where T : BaseControl, new()
     {
+        /// <summary>
+        /// The create builder.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="TagBuilder"/>.
+        /// </returns>
         protected override TagBuilder CreateBuilder()
         {
             TagBuilder controlBuilder = new TagBuilder("div");
@@ -16,20 +28,38 @@ namespace DynamicControls.Controls
             return controlBuilder;
         }
 
+        /// <summary>
+        /// The create control.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="TagBuilder"/>.
+        /// </returns>
+        protected abstract TagBuilder CreateControl();
+
+        /// <summary>
+        /// The render text.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         private string RenderText()
         {
             string text = Data.Value<string>("text");
             if (!string.IsNullOrEmpty(text))
             {
                 TagBuilder textBuilder = new TagBuilder("span");
-                textBuilder.InnerHtml += text;
+                textBuilder.SetInnerText(text);
                 return textBuilder.ToString();
             }
             return string.Empty;
         }
 
-        protected abstract TagBuilder CreateControl();
-
+        /// <summary>
+        /// The render label.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         private string RenderLabel()
         {
             string label = Data.Value<string>("label");
