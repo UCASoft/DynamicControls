@@ -17,10 +17,7 @@ namespace DynamicControls.Controls
         {
             TagBuilder control = base.CreateControl();
             control.Attributes.Add("type", "checkbox");
-            if (HasChilds)
-            {
-                control.Attributes.Add("onchange", "checkBoxChange(this);");
-            }
+            control.Attributes.Add("onchange", "checkBoxChange(this);");
             return control;
         }
     }

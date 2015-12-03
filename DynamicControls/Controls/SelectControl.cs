@@ -25,10 +25,7 @@ namespace DynamicControls.Controls
         protected override TagBuilder CreateDataSourceControl()
         {
             var builder = new TagBuilder("select");
-            if (HasChilds)
-            {
-                builder.Attributes.Add("onchange", "selectChange(this);");
-            }
+            builder.Attributes.Add("onchange", "selectChange(this);");
             return builder;
         }
 

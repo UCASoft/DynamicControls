@@ -16,6 +16,7 @@ namespace DynamicControls.Controls
         protected override TagBuilder CreateControl()
         {
             TagBuilder control = new TagBuilder("input");
+            control.Attributes.Add("onchange", "inputChange(this);");
             SetValue(control);
             return control;
         }

@@ -15,12 +15,14 @@ function loadChilds(control) {
     var name = control.attr("id");
     var value = control.attr("value");
     var childPanel = control.children(".child-panel");
-    $.post("GetChilds", { areaName: control.closest("[aria-dynamic = 'true']").attr("id"), parentName: name, parentValue: value }, function (data) {
-        childPanel.html(data);
-        addRadioChange(childPanel);
-        if (window.prepareDynamicControls)
-            window.prepareDynamicControls(childPanel);
-    });
+    if (childPanel.length === 1) {
+        $.post("GetChilds", { areaName: control.closest("[aria-dynamic = 'true']").attr("id"), parentName: name, parentValue: value }, function(data) {
+            childPanel.html(data);
+            addRadioChange(childPanel);
+            if (window.prepareDynamicControls)
+                window.prepareDynamicControls(childPanel);
+        });
+    }
 }
 
 function checkBoxChange(checkBox) {
@@ -38,4 +40,21 @@ function selectChange(select) {
 
 function dateChange(date) {
     
+}
+
+function inputChange(input) {
+    var $input = $(input);
+    var control = $input.closest(".dynamic-control");
+    control.attr("value", $input.val());
+    loadChilds(control);
+}
+
+function getAreaData(areaName) {
+    var data = {};
+    var area = $("#" + areaName + "[aria-dynamic = 'true']");
+    area.find(".dynamic-control[value]").each(function() {
+        var $this = $(this);
+        data[$this.attr("id")] = $this.attr("value");
+    });
+    return data;
 }

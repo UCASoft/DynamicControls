@@ -17,10 +17,7 @@ namespace DynamicControls.Controls
         {
             TagBuilder control = base.CreateControl();
             control.Attributes.Add("type", "date");
-            if (HasChilds)
-            {
-                control.Attributes.Add("onchange", "dateChange(this);");
-            }
+            control.Attributes["onchange"] = "dateChange(this)";
             return control;
         }
     }
