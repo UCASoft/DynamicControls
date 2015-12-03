@@ -3,7 +3,7 @@
     /// <summary>
     /// The DynamicRenderControl interface.
     /// </summary>
-    public interface IDynamicRenderControl : IDynamicControl
+    public interface IDynamicRenderControl
     {
         /// <summary>
         /// The render.
@@ -12,16 +12,5 @@
         /// The <see cref="string"/>.
         /// </returns>
         string Render();
-
-        /// <summary>
-        /// The render childs.
-        /// </summary>
-        /// <param name="parentValue">
-        /// The parent value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        string RenderChilds(string parentValue);
     }
 }

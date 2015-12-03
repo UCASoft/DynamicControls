@@ -15,7 +15,6 @@ namespace DynamicControls.Controls
         /// </returns>
         protected override TagBuilder CreateBuilder()
         {
-            Data.Remove("childs");
             TagBuilder controlBuilder = new TagBuilder("div");
             controlBuilder.AddCssClass("dynamic-control");
             controlBuilder.MergeAttribute("style", "text-align: center;");

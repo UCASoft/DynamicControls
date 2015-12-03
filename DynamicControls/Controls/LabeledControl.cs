@@ -8,7 +8,7 @@ namespace DynamicControls.Controls
     /// <typeparam name="T">
     /// The type instance of BaseControl.
     /// </typeparam>
-    public abstract class LabeledControl<T> : BaseControl<T> where T : BaseControl, new()
+    public abstract class LabeledControl<T> : ParentControl<T> where T : BaseControl, new()
     {
         /// <summary>
         /// The create builder.
@@ -16,7 +16,7 @@ namespace DynamicControls.Controls
         /// <returns>
         /// The <see cref="TagBuilder"/>.
         /// </returns>
-        protected override TagBuilder CreateBuilder()
+        protected override TagBuilder CreateParentBuilder()
         {
             TagBuilder controlBuilder = new TagBuilder("div");
             controlBuilder.AddCssClass("dynamic-control");
