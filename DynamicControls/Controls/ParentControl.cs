@@ -13,8 +13,16 @@ namespace DynamicControls.Controls
     /// <typeparam name="T">
     /// The type instance of BaseControl.
     /// </typeparam>
-    public abstract class ParentControl<T> : BaseControl<T>, IDynamicParentControl where T : BaseControl, new()
+    public abstract class ParentControl<T> : ValueControl<T>, IDynamicParentControl where T : BaseControl, new()
     {
+        /// <summary>
+        /// Gets a value indicating whether has childs.
+        /// </summary>
+        protected bool HasChilds
+        {
+            get { return Data.Value<JArray>("childs") != null; }
+        }
+
         /// <summary>
         /// The render childs.
         /// </summary>
@@ -37,30 +45,20 @@ namespace DynamicControls.Controls
         }
 
         /// <summary>
-        /// The create builder.
+        /// The prepare body.
         /// </summary>
-        /// <returns>
-        /// The <see cref="TagBuilder"/>.
-        /// </returns>
-        protected override TagBuilder CreateBuilder()
+        /// <param name="body">
+        /// The body.
+        /// </param>
+        protected override void PrepareValueBody(TagBuilder body)
         {
-            TagBuilder builder = CreateParentBuilder();
             if (HasChilds)
             {
                 TagBuilder childPanel = CreateChildPanel();
                 childPanel.InnerHtml += RenderChilds(DefaultValue);
-                builder.InnerHtml += childPanel.ToString();
+                body.InnerHtml += childPanel.ToString();
             }
-            return builder;
         }
-
-        /// <summary>
-        /// The create parent builder.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="TagBuilder"/>.
-        /// </returns>
-        protected abstract TagBuilder CreateParentBuilder();
 
         /// <summary>
         /// The render any childs.

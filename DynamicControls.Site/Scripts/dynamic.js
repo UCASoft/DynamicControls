@@ -15,7 +15,7 @@ function loadChilds(control) {
     var name = control.attr("id");
     var value = control.attr("value");
     var childPanel = control.children(".child-panel");
-    $.post("GetChilds", { areaName: childPanel.closest("[aria-dynamic = 'true']").attr("id"), parentName: name, parentValue: value }, function(data) {
+    $.post("GetChilds", { areaName: control.closest("[aria-dynamic = 'true']").attr("id"), parentName: name, parentValue: value }, function (data) {
         childPanel.html(data);
         addRadioChange(childPanel);
         if (window.prepareDynamicControls)

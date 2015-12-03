@@ -11,21 +11,19 @@ namespace DynamicControls.Controls
     public abstract class LabeledControl<T> : ParentControl<T> where T : BaseControl, new()
     {
         /// <summary>
-        /// The create builder.
+        /// The prepare value body.
         /// </summary>
-        /// <returns>
-        /// The <see cref="TagBuilder"/>.
-        /// </returns>
-        protected override TagBuilder CreateParentBuilder()
+        /// <param name="body">
+        /// The body.
+        /// </param>
+        protected override void PrepareValueBody(TagBuilder body)
         {
-            TagBuilder controlBuilder = new TagBuilder("div");
-            controlBuilder.AddCssClass("dynamic-control");
-            controlBuilder.InnerHtml += RenderLabel();
+            body.InnerHtml += RenderLabel();
             var workBuilder = CreateControl();
             workBuilder.AddCssClass("work-element");
-            controlBuilder.InnerHtml += workBuilder.ToString();
-            controlBuilder.InnerHtml += RenderText();
-            return controlBuilder;
+            body.InnerHtml += workBuilder.ToString();
+            body.InnerHtml += RenderText();
+            base.PrepareValueBody(body);
         }
 
         /// <summary>

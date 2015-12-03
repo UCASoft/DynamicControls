@@ -8,16 +8,15 @@ namespace DynamicControls.Controls
     public class AreaControl : ParentControl<AreaControl>
     {
         /// <summary>
-        /// The create parent builder.
+        /// The prepare body.
         /// </summary>
-        /// <returns>
-        /// The <see cref="TagBuilder"/>.
-        /// </returns>
-        protected override TagBuilder CreateParentBuilder()
+        /// <param name="body">
+        /// The body.
+        /// </param>
+        protected override void PrepareValueBody(TagBuilder body)
         {
-            TagBuilder area = new TagBuilder("div");
-            area.Attributes.Add("aria-dynamic", "true");
-            return area;
+            body.Attributes.Add("aria-dynamic", "true");
+            base.PrepareValueBody(body);
         }
     }
 }

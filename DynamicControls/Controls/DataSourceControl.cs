@@ -21,7 +21,7 @@ namespace DynamicControls.Controls
         protected override TagBuilder CreateControl()
         {
             TagBuilder control = CreateDataSourceControl();
-            BindDataSource(control, GetDataSource(), this.DefaultValue);
+            BindDataSource(control, GetDataSource(), DefaultValue);
             return control;
         }
 

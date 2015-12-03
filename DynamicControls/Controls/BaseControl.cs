@@ -21,19 +21,6 @@ namespace DynamicControls.Controls
         protected JObject Data { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether has childs.
-        /// </summary>
-        protected bool HasChilds
-        {
-            get { return Data.Value<JArray>("childs") != null; }
-        }
-
-        /// <summary>
-        /// Gets the default value.
-        /// </summary>
-        protected string DefaultValue { get; private set; }
-
-        /// <summary>
         /// The create control.
         /// </summary>
         /// <param name="control">
@@ -60,11 +47,10 @@ namespace DynamicControls.Controls
         /// <param name="control">
         /// The control.
         /// </param>
-        public void Build(JObject control)
+        public virtual void Build(JObject control)
         {
             Data = control;
             Name = control.Value<string>("name");
-            DefaultValue = control.Value<string>("defaultValue");
         }
     }
 
@@ -107,18 +93,19 @@ namespace DynamicControls.Controls
         /// </returns>
         public string Render()
         {
-            TagBuilder builder = CreateBuilder();
-            builder.GenerateId(Name);
-
-            return builder.ToString();
+            TagBuilder body = new TagBuilder("div");
+            body.GenerateId(Name);
+            body.AddCssClass("dynamic-control");
+            PrepareBody(body);
+            return body.ToString();
         }
 
         /// <summary>
-        /// The create builder.
+        /// The prepare body.
         /// </summary>
-        /// <returns>
-        /// The <see cref="TagBuilder"/>.
-        /// </returns>
-        protected abstract TagBuilder CreateBuilder();
+        /// <param name="body">
+        /// The body.
+        /// </param>
+        protected abstract void PrepareBody(TagBuilder body);
     }
 }
