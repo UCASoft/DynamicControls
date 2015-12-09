@@ -1,5 +1,6 @@
 using System.Web;
 using DynamicControls.Controls;
+using DynamicControls.Delegates;
 using Newtonsoft.Json.Linq;
 
 namespace DynamicControls
@@ -18,6 +19,11 @@ namespace DynamicControls
         /// The additional properties key.
         /// </summary>
         public const string AdditionalPropertiesKey = "AdditionalProperties";
+
+        /// <summary>
+        /// The registered types.
+        /// </summary>
+        public const string GetTypeDelegateKey = "GetTypeDelegate";
 
         /// <summary>
         /// The area data key.
@@ -83,6 +89,21 @@ namespace DynamicControls
         {
             HttpContext.Current.Session[DataSourceDelegateKey] = dataSourceDelegate;
             HttpContext.Current.Session[AdditionalPropertiesKey] = additionalProperties;
+            return this;
+        }
+
+        /// <summary>
+        /// The register get type delegate.
+        /// </summary>
+        /// <param name="getTypeDelegate">
+        /// The get type delegate.
+        /// </param>
+        /// <returns>
+        /// The <see cref="DynamicControlsBuilder"/>.
+        /// </returns>
+        public DynamicControlsBuilder RegisterGetTypeDelegate(GetTypeDelegate getTypeDelegate)
+        {
+            HttpContext.Current.Session[GetTypeDelegateKey] = getTypeDelegate;
             return this;
         }
     }

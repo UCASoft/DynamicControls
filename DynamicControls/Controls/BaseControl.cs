@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
+
+using DynamicControls.Delegates;
 using DynamicControls.Exceptions;
 using Newtonsoft.Json.Linq;
 
@@ -31,8 +34,18 @@ namespace DynamicControls.Controls
         /// </returns>
         public static IDynamicControl CreateControl(JObject control)
         {
-            string typeName = string.Format("DynamicControls.Controls.{0}Control", control.Value<string>("type"));
-            IDynamicControl renderControl = Activator.CreateInstance(Type.GetType(typeName, true)) as IDynamicControl;
+            string typeCode = control.Value<string>("type");
+            string typeName = string.Format("DynamicControls.Controls.{0}Control", typeCode);
+            Type type = Type.GetType(typeName);
+            if (type == null)
+            {
+                GetTypeDelegate getTypeDelegate = HttpContext.Current.Session[DynamicControlsBuilder.GetTypeDelegateKey] as GetTypeDelegate;
+                if (getTypeDelegate != null)
+                    type = getTypeDelegate(typeCode);
+            }
+            if (type == null)
+                throw new TypeLoadException();
+            IDynamicControl renderControl = Activator.CreateInstance(type) as IDynamicControl;
             if (renderControl != null)
             {
                 renderControl.Build(control);

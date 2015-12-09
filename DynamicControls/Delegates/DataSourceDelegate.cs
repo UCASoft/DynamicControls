@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
-namespace DynamicControls
+namespace DynamicControls.Delegates
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// The data source delegate.
     /// </summary>

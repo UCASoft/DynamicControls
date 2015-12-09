@@ -89,7 +89,8 @@
     <Compile Include="Controls\RadioListControl.cs" />
     <Compile Include="Controls\SelectControl.cs" />
     <Compile Include="Controls\ValueControl.cs" />
-    <Compile Include="DataSourceDelegate.cs" />
+    <Compile Include="Delegates\DataSourceDelegate.cs" />
+    <Compile Include="Delegates\GetTypeDelegate.cs" />
     <Compile Include="DynamicController.cs" />
     <Compile Include="DynamicControlsBuilder.cs" />
     <Compile Include="DynamicDataSource.cs" />

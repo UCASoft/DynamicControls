@@ -3,7 +3,7 @@
 });
 
 function addRadioChange(parent) {
-    $(parent).find(".radio-list").closest(".dynamic-control:has(.child-panel)").find("input[type=radio]").change(function () {
+    $(parent).find(".radio-list").find("input[type=radio]").change(function () {
         var $this = $(this);
         var control = $this.closest(".dynamic-control");
         control.attr("value", $this.val());
