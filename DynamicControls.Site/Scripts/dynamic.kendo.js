@@ -14,15 +14,8 @@ function prepareDynamicKendoControls(parentPanel) {
         change: onComboBoxChange,
         width: "270px"
     });
-    /*var controls = $(parentPanel).children(".dynamic-control");
-    controls.each(function () {
-        prepareDynamicKendoControl(this);
-    });*/
+    $(parentPanel).find("input[type = 'entry-selector']").kendoComboBox();
 }
-
-/*function prepareDynamicKendoControl(control) {
-    
-}*/
 
 function onDateChange() {
     var control = this.element.closest(".dynamic-control");

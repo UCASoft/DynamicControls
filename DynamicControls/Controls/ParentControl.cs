@@ -18,7 +18,7 @@ namespace DynamicControls.Controls
         /// <summary>
         /// Gets a value indicating whether has childs.
         /// </summary>
-        protected bool HasChilds
+        private bool HasChilds
         {
             get { return Data.Value<JArray>("childs") != null; }
         }
