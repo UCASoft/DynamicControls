@@ -1,19 +1,23 @@
-﻿$(document).ready(function() {
+﻿(function($) {
+    $.dynamic.prepareDynamicControls.push(prepareDynamicBootstrapControls);
+})(jQuery);
+
+$(document).ready(function () {
     var area = $("[aria-dynamic = 'true']");
     area.addClass("row");
     var mainChildPanel = area.children(".child-panel");
     mainChildPanel.addClass("col-lg-10 col-lg-offset-1");
-    prepareDynamicControls(mainChildPanel);
+    prepareDynamicBootstrapControls(mainChildPanel);
 });
 
-function prepareDynamicControls(parentPanel) {
+function prepareDynamicBootstrapControls(parentPanel) {
     var controls = $(parentPanel).children(".dynamic-control");
     controls.each(function () {
-        prepareDynamicControl(this);
+        prepareDynamicBootstrapControl(this);
     });
 }
 
-function prepareDynamicControl(control) {
+function prepareDynamicBootstrapControl(control) {
     var $control = $(control);
     var childs = $control.children().not(".child-panel");
     childs.wrapAll($("<div/>").addClass("form-group"));
@@ -55,5 +59,5 @@ function prepareDynamicControl(control) {
             }
         }
     });
-    prepareDynamicControls($control.children(".child-panel"));
+    prepareDynamicBootstrapControls($control.children(".child-panel"));
 }

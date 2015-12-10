@@ -1,4 +1,13 @@
-﻿$(document).ready(function() {
+﻿(function($) {
+    $.dynamic = $.dynamic || {};
+
+    if (!$.dynamic.prepareDynamicControls) {
+        $.dynamic.prepareDynamicControls = [];
+    }
+
+})(jQuery);
+
+$(document).ready(function () {
     addRadioChange($("[aria-dynamic = 'true']"));
 });
 
@@ -19,8 +28,11 @@ function loadChilds(control) {
         $.post("GetChilds", { areaName: control.closest("[aria-dynamic = 'true']").attr("id"), parentName: name, parentValue: value }, function(data) {
             childPanel.html(data);
             addRadioChange(childPanel);
-            if (window.prepareDynamicControls)
-                window.prepareDynamicControls(childPanel);
+            for (var i = 0; i < $.dynamic.prepareDynamicControls.length; i++) {
+                $.dynamic.prepareDynamicControls[i](childPanel);
+            }
+            /*if (window.prepareDynamicControls)
+                window.prepareDynamicControls(childPanel);*/
         });
     }
 }
@@ -32,14 +44,11 @@ function checkBoxChange(checkBox) {
 }
 
 function selectChange(select) {
-    var $select = $(select);
-    var control = $select.closest(".dynamic-control");
-    control.attr("value", $select.val());
-    loadChilds(control);
+    inputChange(select);
 }
 
 function dateChange(date) {
-    
+    inputChange(date);
 }
 
 function inputChange(input) {
