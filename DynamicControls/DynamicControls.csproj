@@ -100,6 +100,7 @@
     <Compile Include="Exceptions\InvalidTypeException.cs" />
     <Compile Include="Exceptions\MissingControlsException.cs" />
     <Compile Include="Exceptions\UseLibraryKeyException.cs" />
+    <Compile Include="IDynamicController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
