@@ -31,8 +31,6 @@ function loadChilds(control) {
             for (var i = 0; i < $.dynamic.prepareDynamicControls.length; i++) {
                 $.dynamic.prepareDynamicControls[i](childPanel);
             }
-            /*if (window.prepareDynamicControls)
-                window.prepareDynamicControls(childPanel);*/
         });
     }
 }

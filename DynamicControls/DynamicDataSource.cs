@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
+using DynamicControls.Exceptions;
+
 namespace DynamicControls
 {
-    using DynamicControls.Exceptions;
-
     /// <summary>
     /// The dynamic data source.
     /// </summary>
