@@ -1,5 +1,7 @@
 ﻿using System.Web.Mvc;
 
+using Newtonsoft.Json.Linq;
+
 namespace DynamicControls.Controls
 {
     /// <summary>
@@ -20,10 +22,28 @@ namespace DynamicControls.Controls
         {
             body.InnerHtml += RenderLabel();
             var workBuilder = CreateControl();
+            if (Data["checkedRoles"] != null)
+            {
+                PrepareCheckedRoles(workBuilder, Data["checkedRoles"] as JObject);
+            }
             workBuilder.AddCssClass("work-element");
             body.InnerHtml += workBuilder.ToString();
             body.InnerHtml += RenderText();
             base.PrepareValueBody(body);
+        }
+
+        /// <summary>
+        /// The prepare checked roles.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="checkedRoles">
+        /// The checked roles.
+        /// </param>
+        protected virtual void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

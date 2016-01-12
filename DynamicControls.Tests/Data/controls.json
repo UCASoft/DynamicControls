@@ -26,7 +26,11 @@
                 {
                   "type": "Date",
                   "name": "date",
-                  "label": "Date to forget"
+                  "label": "Date to forget",
+                  "checkedRoles": {
+                    "min": "now",
+                    "max": "now+6months"
+                  }
                 }
               ]
             },

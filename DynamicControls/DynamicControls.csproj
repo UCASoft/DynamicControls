@@ -97,6 +97,7 @@
     <Compile Include="DynamicDataSource.cs" />
     <Compile Include="DynamicHelperExtended.cs" />
     <Compile Include="Exceptions\InvalidInputData.cs" />
+    <Compile Include="Exceptions\InvalidRoleExpression.cs" />
     <Compile Include="Exceptions\InvalidTypeException.cs" />
     <Compile Include="Exceptions\MissingControlsException.cs" />
     <Compile Include="Exceptions\UseLibraryKeyException.cs" />
