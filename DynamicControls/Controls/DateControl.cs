@@ -38,6 +38,7 @@ namespace DynamicControls.Controls
         /// </param>
         protected override void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
         {
+            base.PrepareCheckedRoles(control, checkedRoles);
             if (checkedRoles["min"] != null)
             {
                 control.Attributes.Add("min", CreateRole(checkedRoles.Value<string>("min")));

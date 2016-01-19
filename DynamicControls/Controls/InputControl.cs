@@ -1,5 +1,7 @@
 ﻿using System.Web.Mvc;
 
+using Newtonsoft.Json.Linq;
+
 namespace DynamicControls.Controls
 {
     /// <summary>
@@ -19,6 +21,23 @@ namespace DynamicControls.Controls
             control.Attributes.Add("onchange", "inputChange(this);");
             SetValue(control);
             return control;
+        }
+
+                /// <summary>
+        /// The prepare checked roles.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="checkedRoles">
+        /// The checked roles.
+        /// </param>
+        protected override void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
+        {
+            if (checkedRoles.Value<bool>("required"))
+            {
+                control.Attributes.Add("required", "required");
+            }
         }
 
         /// <summary>

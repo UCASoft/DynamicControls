@@ -8,7 +8,10 @@
         {
           "type": "Input",
           "name": "name-field",
-          "label": "Name"
+          "label": "Name",
+          "checkedRoles": {
+            "required": true
+          }
         },
         {
           "type": "Input",
