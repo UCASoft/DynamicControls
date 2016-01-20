@@ -39,7 +39,8 @@ namespace DynamicControls.Controls
             if (childs != null)
             {
                 childsRender += RenderAnyChilds(childs);
-                childsRender += RenderChildsByValue(childs, parentValue);
+                if (!string.IsNullOrEmpty(parentValue))
+                    childsRender += RenderChildsByValue(childs, parentValue);
             }
             return childsRender;
         }
@@ -92,7 +93,7 @@ namespace DynamicControls.Controls
         private static string RenderChildsByValue(JArray childs, string parentValue)
         {
             string childsRender = string.Empty;
-            JObject valueChilds = childs.FirstOrDefault(c => c.Value<string>("key").Equals(parentValue)) as JObject;
+            JObject valueChilds = childs.FirstOrDefault(c => c.Value<string>("key").Contains(parentValue + ',') || c.Value<string>("key").EndsWith(parentValue)) as JObject;
             if (valueChilds != null)
             {
                 JArray controls = valueChilds.Value<JArray>("controls");
