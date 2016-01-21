@@ -14,7 +14,6 @@ function prepareDynamicKendoControls(parentPanel) {
         change: onComboBoxChange,
         width: "270px"
     });
-    $(parentPanel).find("input[type = 'entry-selector']").kendoComboBox();
 }
 
 function onDateChange() {

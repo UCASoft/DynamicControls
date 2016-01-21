@@ -27,6 +27,16 @@ namespace DynamicControls.Controls
         }
 
         /// <summary>
+        /// The set default value.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        protected override void SetDefaultValue(TagBuilder control)
+        {           
+        }
+
+        /// <summary>
         /// The create data source control.
         /// </summary>
         /// <returns>

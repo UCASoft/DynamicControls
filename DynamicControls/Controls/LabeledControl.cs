@@ -22,6 +22,7 @@ namespace DynamicControls.Controls
         {
             body.InnerHtml += RenderLabel();
             var workBuilder = CreateControl();
+            this.SetDefaultValue(workBuilder);
             if (Data["checkedRoles"] != null)
             {
                 PrepareCheckedRoles(workBuilder, Data["checkedRoles"] as JObject);
@@ -53,6 +54,14 @@ namespace DynamicControls.Controls
         /// The <see cref="TagBuilder"/>.
         /// </returns>
         protected abstract TagBuilder CreateControl();
+
+        /// <summary>
+        /// The set default value.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        protected abstract void SetDefaultValue(TagBuilder control);
 
         /// <summary>
         /// The render text.

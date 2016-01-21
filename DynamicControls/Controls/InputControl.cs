@@ -19,7 +19,7 @@ namespace DynamicControls.Controls
         {
             TagBuilder control = new TagBuilder("input");
             control.Attributes.Add("onchange", "inputChange(this);");
-            SetValue(control);
+            this.SetDefaultValue(control);
             return control;
         }
 
@@ -41,12 +41,12 @@ namespace DynamicControls.Controls
         }
 
         /// <summary>
-        /// The set value.
+        /// The set default value.
         /// </summary>
         /// <param name="control">
         /// The control.
         /// </param>
-        private void SetValue(TagBuilder control)
+        protected override void SetDefaultValue(TagBuilder control)
         {
             string value = DefaultValue;
             if (!string.IsNullOrEmpty(value))
