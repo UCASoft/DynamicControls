@@ -13,10 +13,10 @@ namespace DynamicControls.Controls
         /// <param name="body">
         /// The body.
         /// </param>
-        protected override void PrepareValueBody(TagBuilder body)
+        protected override void PrepareBody(TagBuilder body)
         {
             body.Attributes.Add("aria-dynamic", "true");
-            base.PrepareValueBody(body);
+            base.PrepareBody(body);
         }
     }
 }

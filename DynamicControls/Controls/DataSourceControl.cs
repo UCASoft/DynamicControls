@@ -33,7 +33,7 @@ namespace DynamicControls.Controls
         /// The control.
         /// </param>
         protected override void SetDefaultValue(TagBuilder control)
-        {           
+        {
         }
 
         /// <summary>

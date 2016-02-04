@@ -19,11 +19,10 @@ namespace DynamicControls.Controls
         {
             TagBuilder control = new TagBuilder("input");
             control.Attributes.Add("onchange", "inputChange(this);");
-            this.SetDefaultValue(control);
             return control;
         }
 
-                /// <summary>
+        /// <summary>
         /// The prepare checked roles.
         /// </summary>
         /// <param name="control">

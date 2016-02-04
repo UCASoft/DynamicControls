@@ -83,9 +83,11 @@
     <Compile Include="Controls\IDynamicControl.cs" />
     <Compile Include="Controls\IDynamicParentControl.cs" />
     <Compile Include="Controls\IDynamicRenderControl.cs" />
+    <Compile Include="Controls\IDynamicValueControl.cs" />
     <Compile Include="Controls\InputControl.cs" />
     <Compile Include="Controls\LabeledControl.cs" />
     <Compile Include="Controls\ParentControl.cs" />
+    <Compile Include="Controls\ValuedParentControl.cs" />
     <Compile Include="Controls\RadioListControl.cs" />
     <Compile Include="Controls\SelectControl.cs" />
     <Compile Include="Controls\UploadControl.cs" />

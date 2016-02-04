@@ -1,7 +1,5 @@
 ﻿using System.Web.Mvc;
 
-using Newtonsoft.Json.Linq;
-
 namespace DynamicControls.Controls
 {
     /// <summary>
@@ -10,58 +8,30 @@ namespace DynamicControls.Controls
     /// <typeparam name="T">
     /// The type instance of BaseControl.
     /// </typeparam>
-    public abstract class LabeledControl<T> : ParentControl<T> where T : BaseControl, new()
+    public abstract class LabeledControl<T> : ValuedParentControl<T> where T : BaseControl, new()
     {
+        /// <summary>
+        /// The prepare body before work control.
+        /// </summary>
+        /// <param name="body">
+        /// The body.
+        /// </param>
+        protected override void PrepareBodyBeforeWorkControl(TagBuilder body)
+        {
+            body.InnerHtml += RenderLabel();
+        }
+
         /// <summary>
         /// The prepare value body.
         /// </summary>
         /// <param name="body">
         /// The body.
         /// </param>
-        protected override void PrepareValueBody(TagBuilder body)
-        {
-            body.InnerHtml += RenderLabel();
-            var workBuilder = CreateControl();
-            this.SetDefaultValue(workBuilder);
-            if (Data["checkedRoles"] != null)
-            {
-                PrepareCheckedRoles(workBuilder, Data["checkedRoles"] as JObject);
-            }
-            workBuilder.AddCssClass("work-element");
-            body.InnerHtml += workBuilder.ToString();
+        protected override void PrepareBodyAfterWorkControl(TagBuilder body)
+        {           
             body.InnerHtml += RenderText();
-            base.PrepareValueBody(body);
+            base.PrepareBodyAfterWorkControl(body);
         }
-
-        /// <summary>
-        /// The prepare checked roles.
-        /// </summary>
-        /// <param name="control">
-        /// The control.
-        /// </param>
-        /// <param name="checkedRoles">
-        /// The checked roles.
-        /// </param>
-        protected virtual void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// The create control.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="TagBuilder"/>.
-        /// </returns>
-        protected abstract TagBuilder CreateControl();
-
-        /// <summary>
-        /// The set default value.
-        /// </summary>
-        /// <param name="control">
-        /// The control.
-        /// </param>
-        protected abstract void SetDefaultValue(TagBuilder control);
 
         /// <summary>
         /// The render text.
