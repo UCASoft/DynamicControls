@@ -22,6 +22,23 @@ namespace DynamicControls.Controls
         }
 
         /// <summary>
+        /// The get child by key.
+        /// </summary>
+        /// <param name="childs">
+        /// The childs.
+        /// </param>
+        /// <param name="key">
+        /// The key.
+        /// </param>
+        /// <returns>
+        /// The <see cref="JObject"/>.
+        /// </returns>
+        public static JObject GetChildByKey(JArray childs, string key)
+        {
+            return childs.FirstOrDefault(c => c.Value<string>("key").Contains(key + ',') || c.Value<string>("key").EndsWith(key)) as JObject;
+        }
+
+        /// <summary>
         /// The render childs.
         /// </summary>
         /// <param name="parentValue">
@@ -94,7 +111,7 @@ namespace DynamicControls.Controls
         internal static string RenderChildsByValue(JArray childs, string key, string parentValue)
         {
             string childsRender = string.Empty;
-            JObject valueChilds = childs.FirstOrDefault(c => c.Value<string>("key").Contains(key + ',') || c.Value<string>("key").EndsWith(key)) as JObject;
+            JObject valueChilds = GetChildByKey(childs, key);
             if (valueChilds != null)
             {
                 JArray controls = valueChilds.Value<JArray>("controls");

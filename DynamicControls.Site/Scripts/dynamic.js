@@ -5,6 +5,10 @@
         $.dynamic.prepareDynamicControls = [];
     }
 
+    $.dynamic.validationAvailable = function() {
+        return $.validate || false;
+    }
+
 })(jQuery);
 
 $(document).ready(function () {
@@ -16,6 +20,7 @@ function addRadioChange(parent) {
         var $this = $(this);
         var control = $this.closest(".dynamic-control");
         control.attr("value", $this.val());
+        control.attr("text", $this.parent().text());
         loadChilds(control);
     });
 }
@@ -42,7 +47,11 @@ function checkBoxChange(checkBox) {
 }
 
 function selectChange(select) {
-    inputChange(select);
+    var $select = $(select);
+    var control = $select.closest(".dynamic-control");
+    control.attr("value", $select.val());
+    control.attr("text", $select.find("option[value = '" + $select.val() + "']").text());
+    loadChilds(control);
 }
 
 function dateChange(date) {
@@ -53,12 +62,18 @@ function inputChange(input) {
     var $input = $(input);
     var control = $input.closest(".dynamic-control");
     control.attr("value", $input.val());
+    control.attr("text", $input.val());
     loadChilds(control);
 }
 
 function getAreaData(areaName) {
     var data = {};
     var area = $("#" + areaName + "[aria-dynamic = 'true']");
+    /*if ($.dynamic.validationAvailable) {
+        var validator = area.validate();
+        if (!validator.element(area))
+            return null;
+    }*/
     area.find(".dynamic-control[value]").each(function() {
         var $this = $(this);
         data[$this.attr("id")] = $this.attr("value");

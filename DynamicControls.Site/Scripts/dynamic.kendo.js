@@ -19,11 +19,13 @@ function prepareDynamicKendoControls(parentPanel) {
 function onDateChange() {
     var control = this.element.closest(".dynamic-control");
     control.attr("value", this.value());
+    control.attr("text", kendo.toString(this.value(), 'd'));
     loadChilds(control);
 }
 
 function onComboBoxChange() {
     var control = this.element.closest(".dynamic-control");
     control.attr("value", this.value());
+    control.attr("text", this.text());
     loadChilds(control);
 }
