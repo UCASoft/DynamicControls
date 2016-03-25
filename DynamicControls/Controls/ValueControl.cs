@@ -63,13 +63,7 @@ namespace DynamicControls.Controls
             if (!string.IsNullOrEmpty(ParentValue))
                 body.MergeAttribute("parent-value", ParentValue);
             PrepareBodyBeforeWorkControl(body);
-            TagBuilder workControl = CreateControl();
-            SetDefaultValue(workControl);
-            if (Data["checkedRoles"] != null)
-            {
-                PrepareCheckedRoles(workControl, Data["checkedRoles"] as JObject);
-            }
-            workControl.AddCssClass("work-element");
+            TagBuilder workControl = PrepareWorkControl();
             body.InnerHtml += workControl.ToString();
             PrepareBodyAfterWorkControl(body);            
         }
@@ -123,5 +117,23 @@ namespace DynamicControls.Controls
         /// The control.
         /// </param>
         protected abstract void SetDefaultValue(TagBuilder control);
+
+        /// <summary>
+        /// The prepare work control.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="TagBuilder"/>.
+        /// </returns>
+        private TagBuilder PrepareWorkControl()
+        {
+            TagBuilder workControl = CreateControl();
+            SetDefaultValue(workControl);
+            if (Data["checkedRoles"] != null)
+            {
+                PrepareCheckedRoles(workControl, Data["checkedRoles"] as JObject);
+            }
+            workControl.AddCssClass("work-element");
+            return workControl;
+        }
     }
 }
