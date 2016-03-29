@@ -1,5 +1,19 @@
-﻿(function($) {
+﻿(function ($) {
+
     $.dynamic.prepareDynamicControls.push(prepareDynamicBootstrapControls);
+
+    if ($.dynamic.validationAvailable()) {
+        $.validator.setDefaults({
+            highlight: function(element, errorClass) {
+                $(element).closest(".form-group").addClass(errorClass);
+            },
+            unhighlight: function (element, errorClass) {
+                $(element).closest(".form-group").removeClass(errorClass);
+            },
+            errorClass: "has-error"
+        });
+    }
+
 })(jQuery);
 
 $(document).ready(function () {

@@ -32,7 +32,8 @@
                   "label": "Date to forget",
                   "checkedRoles": {
                     "min": "now",
-                    "max": "now+6months"
+                    "max": "now+6months",
+                    "required":  true
                   }
                 }
               ]

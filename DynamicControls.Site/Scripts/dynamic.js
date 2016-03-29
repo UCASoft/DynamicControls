@@ -1,4 +1,5 @@
-﻿(function($) {
+﻿(function ($) {
+
     $.dynamic = $.dynamic || {};
 
     if (!$.dynamic.prepareDynamicControls) {
@@ -6,7 +7,16 @@
     }
 
     $.dynamic.validationAvailable = function() {
-        return $.validate || false;
+        return $.validator || false;
+    }
+
+    if ($.dynamic.validationAvailable()) {
+        $.validator.setDefaults({
+            highlight: function(element, errorClass) {
+                $(element).addClass(errorClass);
+            },
+            errorPlacement: function () {}
+        });
     }
 
 })(jQuery);
@@ -69,11 +79,14 @@ function inputChange(input) {
 function getAreaData(areaName) {
     var data = {};
     var area = $("#" + areaName + "[aria-dynamic = 'true']");
-    /*if ($.dynamic.validationAvailable) {
-        var validator = area.validate();
-        if (!validator.element(area))
+    if ($.dynamic.validationAvailable()) {        
+        area.wrap("<form id=\"temp-dynamic-form\"/>");
+        var form = area.parent();
+        var valid = form.valid();
+        area.unwrap();
+        if (!valid)
             return null;
-    }*/
+    }
     area.find(".dynamic-control[value]").each(function() {
         var $this = $(this);
         data[$this.attr("id")] = $this.attr("value");
