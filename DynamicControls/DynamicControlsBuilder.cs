@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Web;
 using DynamicControls.Controls;
 using DynamicControls.Delegates;
@@ -31,9 +32,14 @@ namespace DynamicControls
         private const string AreaDataKey = "AreaDataFor{0}";
 
         /// <summary>
-        /// The area control.
+        /// The controls.
         /// </summary>
-        private readonly AreaControl areaControl;
+        private readonly string controls;
+
+        /// <summary>
+        /// The postfix.
+        /// </summary>
+        private string postfix;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicControlsBuilder"/> class.
@@ -43,9 +49,8 @@ namespace DynamicControls
         /// </param>
         public DynamicControlsBuilder(string controls)
         {
-            JObject control = JObject.Parse(controls);
-            areaControl = AreaControl.Parse(control);
-            HttpContext.Current.Session[GetAreaTempDataKey(areaControl.Name)] = control;
+            postfix = string.Empty;
+            this.controls = controls;
         }
 
         /// <summary>
@@ -70,6 +75,10 @@ namespace DynamicControls
         /// </returns>
         public string ToHtmlString()
         {
+            JObject control = JObject.Parse(controls);
+            ApplyPostfix(control);
+            AreaControl areaControl = AreaControl.Parse(control);
+            HttpContext.Current.Session[GetAreaTempDataKey(areaControl.Name)] = control;
             return areaControl.Render();
         }
 
@@ -105,6 +114,51 @@ namespace DynamicControls
         {
             HttpContext.Current.Session[GetTypeDelegateKey] = getTypeDelegate;
             return this;
+        }
+
+        /// <summary>
+        /// The set postfix.
+        /// </summary>
+        /// <param name="postfix">
+        /// The postfix.
+        /// </param>
+        /// <returns>
+        /// The <see cref="DynamicControlsBuilder"/>.
+        /// </returns>
+        public DynamicControlsBuilder SetPostfix(string postfix)
+        {
+            this.postfix = postfix;
+            return this;
+        }
+
+        /// <summary>
+        /// The apply postfix.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        private void ApplyPostfix(JObject control)
+        {
+            JToken nameToken = control["name"];
+            if (nameToken != null)
+            {
+                nameToken.Replace(string.Format("{0}{1}", nameToken, postfix));
+            }
+            JArray childToken = control["childs"] as JArray;
+            if (childToken != null)
+            {
+                foreach (JObject child in childToken.OfType<JObject>())
+                {
+                    JArray childControls = child["controls"] as JArray;
+                    if (childControls != null)
+                    {
+                        foreach (JObject childControl in childControls.OfType<JObject>())
+                        {
+                            ApplyPostfix(childControl);
+                        }
+                    }
+                }
+            }
         }
     }
 }

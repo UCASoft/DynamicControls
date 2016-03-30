@@ -7,7 +7,7 @@
     private DynamicDataSource DataSourceDelegate(string name, Dictionary<string, string> additionalParameters)
     {
         DynamicDataSource result = new DynamicDataSource();
-        if (name.Equals("select-field"))
+        if (name.StartsWith("select-field"))
         {
             result.Add("0", "Day");
             result.Add("1", "Week");
@@ -15,7 +15,7 @@
             result.Add("3", "Year");
             result.Add(additionalParameters.First().Key, additionalParameters.First().Value);
         }
-        else if (name.Equals("radio-list"))
+        else if (name.StartsWith("radio-list"))
         {
             result.Add("0", "New");
             result.Add("1", "Old");
@@ -40,10 +40,13 @@
 }
 
 <h2>Dynamic Controls</h2>
+@(Html.DynamicControls(File.ReadAllText(@"controls.json")).SetPostfix("One").RegisterDataSourceDelegate(DataSourceDelegate, "dataSource").RegisterGetTypeDelegate(GetTypeDelegate))
 
-@(Html.DynamicControls(File.ReadAllText(@"controls.json")).RegisterDataSourceDelegate(DataSourceDelegate, "dataSource").RegisterGetTypeDelegate(GetTypeDelegate))
-
-<button onclick="getDynamicData();">Get data</button>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1">
+        <button class="btn btn-default" onclick="getDynamicData();">Get data</button>
+    </div>
+</div>
 
 @section script
 {
@@ -54,7 +57,7 @@
 
     <script type="text/javascript">
         function getDynamicData() {
-            var data = getAreaData("data-form");
+            var data = getAreaData("data-formOne");
             alert(JSON.stringify(data));
         }
     </script>
