@@ -1,25 +1,14 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 (function(f, define){
     define([ "./kendo.calendar", "./kendo.popup" ], f);
 })(function(){
 
-(function(){
-
-
+var __meta__ = { // jshint ignore:line
+    id: "datepicker",
+    name: "DatePicker",
+    category: "web",
+    description: "The DatePicker widget allows the user to select a date from a calendar or by direct input.",
+    depends: [ "calendar", "popup" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -144,12 +133,18 @@
                 max: options.max,
                 min: options.min,
                 month: options.month,
-                start: options.start
+                start: options.start,
+                disableDates: options.disableDates
             });
         },
 
         setOptions: function(options) {
             var old = this.options;
+            var disableDates = options.disableDates;
+
+            if (disableDates) {
+                options.disableDates = calendar.disabled(disableDates);
+            }
 
             this.options = extend(old, options, {
                 change: old.change,
@@ -232,7 +227,12 @@
         value: function(value) {
             var that = this,
                 calendar = that.calendar,
-                options = that.options;
+                options = that.options,
+                disabledDate = options.disableDates;
+
+            if (disabledDate && disabledDate(value)) {
+                value = null;
+            }
 
             that._value = value;
             that._current = new DATE(+restrictValue(value, options.min, options.max));
@@ -243,6 +243,7 @@
         },
 
         _click: function(e) {
+
             if (e.currentTarget.className.indexOf(SELECTED) !== -1) {
                 this.close();
             }
@@ -273,6 +274,8 @@
             Widget.fn.init.call(that, element, options);
             element = that.element;
             options = that.options;
+
+            options.disableDates = kendo.calendar.disabled(options.disableDates);
 
             options.min = parse(element.attr("min")) || parse(options.min);
             options.max = parse(element.attr("max")) || parse(options.max);
@@ -523,18 +526,23 @@
         },
 
         _change: function(value) {
-            var that = this;
+            var that = this,
+            oldValue = that.element.val(),
+            dateChanged;
 
             value = that._update(value);
+            dateChanged = +that._old != +value;
 
-            if (+that._old != +value) {
+            var valueUpdated = dateChanged && !that._typing;
+            var textFormatted = oldValue !== that.element.val();
+
+            if (valueUpdated || textFormatted) {
+                that.element.trigger(CHANGE);
+            }
+
+            if (dateChanged) {
                 that._old = value;
                 that._oldText = that.element.val();
-
-                if (!that._typing) {
-                    // trigger the DOM change event so any subscriber gets notified
-                    that.element.trigger(CHANGE);
-                }
 
                 that.trigger(CHANGE);
             }
@@ -604,6 +612,13 @@
                 date = parse(value, options.parseFormats, options.culture),
                 isSameType = (date === null && current === null) || (date instanceof Date && current instanceof Date),
                 formattedValue;
+
+            if (options.disableDates(date)) {
+                date = null;
+                if (!that._old) {
+                    value = null;
+                }
+            }
 
             if (+date === +current && isSameType) {
                 formattedValue = kendo.toString(date, options.format, options.culture);
@@ -694,10 +709,6 @@
 
 })(window.kendo.jQuery);
 
-
-
-})();
-
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });

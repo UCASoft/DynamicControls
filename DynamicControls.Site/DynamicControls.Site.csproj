@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.2.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.2.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -123,8 +123,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\kendo\Bootstrap\editor.png" />
     <Content Include="Content\kendo\Bootstrap\imagebrowser.png" />
@@ -144,24 +146,25 @@
     <Content Include="Content\kendo\kendo.bootstrap.min.css" />
     <Content Include="Content\kendo\kendo.common-bootstrap.core.css" />
     <Content Include="Content\kendo\kendo.common-bootstrap.core.min.css" />
+    <Content Include="Content\Site.css" />
     <Content Include="Scripts\dynamic.kendo.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\dynamic.bootstrap.js" />
     <Content Include="Scripts\dynamic.js" />
-    <Content Include="Scripts\jquery-2.2.1.js" />
-    <Content Include="Scripts\jquery-2.2.1.min.js" />
-    <Content Include="Scripts\jquery-2.2.1.min.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <None Include="Scripts\jquery-2.2.2.intellisense.js" />
+    <Content Include="Scripts\jquery-2.2.2.js" />
+    <Content Include="Scripts\jquery-2.2.2.min.js" />
+    <Content Include="Scripts\jquery-2.2.2.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -169,14 +172,14 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\kendo\kendo.calendar.js" />
     <Content Include="Scripts\kendo\kendo.calendar.min.js" />
-    <Content Include="Scripts\kendo\kendo.combobox.js" />
-    <Content Include="Scripts\kendo\kendo.combobox.min.js" />
     <Content Include="Scripts\kendo\kendo.core.js" />
     <Content Include="Scripts\kendo\kendo.core.min.js" />
     <Content Include="Scripts\kendo\kendo.data.js" />
     <Content Include="Scripts\kendo\kendo.data.min.js" />
     <Content Include="Scripts\kendo\kendo.datepicker.js" />
     <Content Include="Scripts\kendo\kendo.datepicker.min.js" />
+    <Content Include="Scripts\kendo\kendo.dropdownlist.js" />
+    <Content Include="Scripts\kendo\kendo.dropdownlist.min.js" />
     <Content Include="Scripts\kendo\kendo.list.js" />
     <Content Include="Scripts\kendo\kendo.list.min.js" />
     <Content Include="Scripts\kendo\kendo.popup.js" />
@@ -184,6 +187,7 @@
     <Content Include="Scripts\kendo\kendo.ui.core.js" />
     <Content Include="Scripts\kendo\kendo.ui.core.min.js" />
     <Content Include="Scripts\kendo\kendo.validator.js" />
+    <Content Include="Scripts\kendo\kendo.validator.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -243,7 +247,7 @@
     <PropertyGroup>
       <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.2.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.2.1\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

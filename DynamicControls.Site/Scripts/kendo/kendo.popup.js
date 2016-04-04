@@ -1,25 +1,14 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
 
-(function(){
-
-
+var __meta__ = { // jshint ignore:line
+    id: "popup",
+    name: "Pop-up",
+    category: "framework",
+    depends: [ "core" ],
+    advanced: true
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -51,7 +40,6 @@
         DOCUMENT_ELEMENT = $(document.documentElement),
         WINDOW = $(window),
         SCROLL = "scroll",
-        RESIZE_SCROLL = "resize scroll",
         cssPrefix = support.transitions.css,
         TRANSFORM = cssPrefix + "transform",
         extend = $.extend,
@@ -129,9 +117,17 @@
                 that._mousedown(e);
             };
 
-            that._resizeProxy = function(e) {
-                that._resize(e);
-            };
+            if (support.mobileOS.android) {
+                that._resizeProxy = function(e) {
+                    setTimeout(function() {
+                        that._resize(e);
+                    }, 600); //Logic from kendo.onResize
+                };
+            } else {
+                that._resizeProxy = function(e) {
+                    that._resize(e);
+                };
+            }
 
             if (options.toggleTarget) {
                 $(options.toggleTarget).on(options.toggleEvent + NS, $.proxy(that.toggle, that));
@@ -175,30 +171,17 @@
         },
 
         _animationClose: function() {
-            var that = this,
-                options = that.options;
+            var that = this;
+            var location = that.wrapper.data(LOCATION);
 
             that.wrapper.hide();
-
-            var location = that.wrapper.data(LOCATION),
-                anchor = $(options.anchor),
-                direction, dirClass;
 
             if (location) {
                 that.wrapper.css(location);
             }
 
-            if (options.anchor != BODY) {
-                direction = ((anchor.attr("class") || "").match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
-                dirClass = ACTIVEBORDER + "-" + direction;
-
-                anchor
-                    .removeClass(dirClass)
-                    .children(ACTIVECHILDREN)
-                    .removeClass(ACTIVE)
-                    .removeClass(dirClass);
-
-                that.element.removeClass(ACTIVEBORDER + "-" + kendo.directions[direction].reverse);
+            if (that.options.anchor != BODY) {
+                that._hideDirClass();
             }
 
             that._closing = false;
@@ -241,7 +224,6 @@
                 fixed = { isFixed: !isNaN(parseInt(y,10)), x: x, y: y },
                 element = that.element,
                 options = that.options,
-                direction = "down",
                 animation, wrapper,
                 anchor = $(options.anchor),
                 mobile = element[0] && element.hasClass("km-widget");
@@ -265,11 +247,9 @@
                                 .bind(that.downEvent, that._mousedownProxy);
 
                     // this binding hangs iOS in editor
-                    if (!(support.mobileOS.ios || support.mobileOS.android)) {
-                        // all elements in IE7/8 fire resize event, causing mayhem
-                        that._toggleResize(false);
-                        that._toggleResize(true);
-                    }
+                    // all elements in IE7/8 fire resize event, causing mayhem
+                    that._toggleResize(false);
+                    that._toggleResize(true);
                 }
 
                 that.wrapper = wrapper = kendo.wrap(element, options.autosize)
@@ -289,22 +269,11 @@
                     wrapper.css(TOP, "-10000px");
                 }
 
-                animation = extend(true, {}, options.animation.open);
                 that.flipped = that._position(fixed);
-                animation.effects = kendo.parseEffects(animation.effects, that.flipped);
-
-                direction = animation.effects.slideIn ? animation.effects.slideIn.direction : direction;
+                animation = that._openAnimation();
 
                 if (options.anchor != BODY) {
-                    var dirClass = ACTIVEBORDER + "-" + direction;
-
-                    element.addClass(ACTIVEBORDER + "-" + kendo.directions[direction].reverse);
-
-                    anchor
-                        .addClass(dirClass)
-                        .children(ACTIVECHILDREN)
-                        .addClass(ACTIVE)
-                        .addClass(dirClass);
+                    that._showDirClass(animation);
                 }
 
                 element.data(EFFECTS, animation.effects)
@@ -313,9 +282,45 @@
             }
         },
 
+        _openAnimation: function() {
+            var animation = extend(true, {}, this.options.animation.open);
+            animation.effects = kendo.parseEffects(animation.effects, this.flipped);
+
+            return animation;
+        },
+
+        _hideDirClass: function() {
+            var anchor = $(this.options.anchor);
+            var direction = ((anchor.attr("class") || "").match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
+            var dirClass = ACTIVEBORDER + "-" + direction;
+
+            anchor
+                .removeClass(dirClass)
+                .children(ACTIVECHILDREN)
+                .removeClass(ACTIVE)
+                .removeClass(dirClass);
+
+            this.element.removeClass(ACTIVEBORDER + "-" + kendo.directions[direction].reverse);
+        },
+
+        _showDirClass: function(animation) {
+            var direction = animation.effects.slideIn ? animation.effects.slideIn.direction : "down";
+            var dirClass = ACTIVEBORDER + "-" + direction;
+
+            $(this.options.anchor)
+                .addClass(dirClass)
+                .children(ACTIVECHILDREN)
+                .addClass(ACTIVE)
+                .addClass(dirClass);
+
+            this.element.addClass(ACTIVEBORDER + "-" + kendo.directions[direction].reverse);
+        },
+
         position: function() {
             if (this.visible()) {
-                this._position();
+                this.flipped = this._position();
+                //this._hideDirClass();
+                //this._showDirClass(this._openAnimation());
             }
         },
 
@@ -384,7 +389,7 @@
         _resize: function(e) {
             var that = this;
 
-            if (e.type === "resize") {
+            if (support.resize.indexOf(e.type) !== -1) {
                 clearTimeout(that._resizeTimeout);
                 that._resizeTimeout = setTimeout(function() {
                     that._position();
@@ -399,9 +404,14 @@
 
         _toggleResize: function(toggle) {
             var method = toggle ? "on" : "off";
+            var eventNames = support.resize;
+
+            if (!(support.mobileOS.ios || support.mobileOS.android)) {
+                eventNames += " " + SCROLL;
+            }
 
             this._scrollableParents()[method](SCROLL, this._resizeProxy);
-            WINDOW[method](RESIZE_SCROLL, this._resizeProxy);
+            WINDOW[method](eventNames, this._resizeProxy);
         },
 
         _mousedown: function(e) {
@@ -558,9 +568,15 @@
             }
 
             var flipPos = extend({}, location);
+            var elementHeight = element.outerHeight();
+            var wrapperHeight =  wrapper.outerHeight();
+
+            if (!wrapper.height() && elementHeight) {
+                wrapperHeight = wrapperHeight + elementHeight;
+            }
 
             if (collisions[0] === "flip") {
-                location.top += that._flip(offsets.top, element.outerHeight(), anchor.outerHeight(), viewportHeight / zoomLevel, origins[0], positions[0], wrapper.outerHeight());
+                location.top += that._flip(offsets.top, elementHeight, anchor.outerHeight(), viewportHeight / zoomLevel, origins[0], positions[0], wrapperHeight);
             }
 
             if (collisions[1] === "flip") {
@@ -641,10 +657,6 @@
     ui.plugin(Popup);
 })(window.kendo.jQuery);
 
-
-
-})();
-
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });

@@ -1,5 +1,6 @@
 ﻿(function($) {
     $.dynamic.prepareDynamicControls.push(prepareDynamicKendoControls);
+    $.dynamic.validateParent.push(kendoValidate);
 })(jQuery);
 
 $(document).ready(function () {
@@ -10,9 +11,24 @@ function prepareDynamicKendoControls(parentPanel) {
     $(parentPanel).find("input[type = 'date']").removeAttr("onchange").kendoDatePicker({
         change: onDateChange
     });
-    $(parentPanel).find("select").removeAttr("onchange").width("270px").kendoComboBox({
-        change: onComboBoxChange,
-        width: "270px"
+    $(parentPanel).find("select").removeAttr("onchange").width("270px").each(function() {
+        var $this = $(this);
+        var nullOptions = $this.children("[value = 'nullRow']");
+        var hasNullOption = nullOptions.length === 1;
+        nullOptions.remove();
+        if (hasNullOption) {
+            $this.kendoDropDownList({
+                change: onDropDownChange,
+                width: "270px",
+                optionLabel: " ",
+                value: " "
+            });
+        } else {
+            $this.kendoDropDownList({
+                change: onDropDownChange,
+                width: "270px"
+            });
+        }
     });
 }
 
@@ -23,9 +39,13 @@ function onDateChange() {
     loadChilds(control);
 }
 
-function onComboBoxChange() {
+function onDropDownChange() {
     var control = this.element.closest(".dynamic-control");
     control.attr("value", this.value());
     control.attr("text", this.text());
     loadChilds(control);
+}
+
+function kendoValidate(form) {
+    return $(form).kendoValidator().data("kendoValidator").validate();
 }

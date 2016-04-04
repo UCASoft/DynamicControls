@@ -46,6 +46,7 @@
                   "name": "select-field",
                   "dataSource": "121",
                   "label": "Time",
+                  "nullRow":  true,
                   "childs": [
                     {
                       "key": "2",
@@ -57,7 +58,10 @@
                         }
                       ]
                     }
-                  ]
+                  ],
+                  "checkedRoles": {
+                    "required":  true
+                  }
                 }
               ]
             }

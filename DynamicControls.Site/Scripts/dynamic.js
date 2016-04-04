@@ -6,6 +6,10 @@
         $.dynamic.prepareDynamicControls = [];
     }
 
+    if (!$.dynamic.validateParent) {
+        $.dynamic.validateParent = [];
+    }
+
     $.dynamic.validationAvailable = function() {
         return $.validator || false;
     }
@@ -77,19 +81,31 @@ function inputChange(input) {
 }
 
 function getAreaData(areaName) {
-    var data = {};
     var area = $("#" + areaName + "[aria-dynamic = 'true']");
-    if ($.dynamic.validationAvailable()) {        
-        area.wrap("<form id=\"temp-dynamic-form\"/>");
-        var form = area.parent();
+    return getChildData(area);
+}
+
+function getChildData(parent) {
+    var data = {};
+    if ($.dynamic.validationAvailable()) {
+        parent.wrap("<form id=\"temp-dynamic-form\"/>");
+        var form = parent.parent();
         var valid = form.valid();
-        area.unwrap();
+        if (valid) {
+            for (var i = 0; i < $.dynamic.validateParent.length; i++) {
+                if (!$.dynamic.validateParent[i](form)) {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        parent.unwrap();
         if (!valid)
             return null;
     }
-    area.find(".dynamic-control[value]").each(function() {
+    parent.find(".dynamic-control[value]").each(function() {
         var $this = $(this);
-        data[$this.attr("id")] = $this.attr("value");
+        data[$this.attr("id")] = { 'value': $this.attr("value"), 'text': $this.attr("text") };
     });
     return data;
 }
