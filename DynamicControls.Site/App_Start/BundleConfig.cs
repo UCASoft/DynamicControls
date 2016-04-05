@@ -25,7 +25,7 @@ namespace DynamicControls.Site
 
             bundles.Add(new ScriptBundle("~/bundles/dynamic-bootstrap").Include("~/Scripts/dynamic.bootstrap.js"));            
 
-            bundles.Add(new ScriptBundle("~/bundles/kendo").Include("~/Scripts/kendo/kendo.core.js", "~/Scripts/kendo/kendo.ui.core.js", "~/Scripts/kendo/kendo.list.js").IncludeDirectory("~/Scripts/kendo", "*.js"));
+            bundles.Add(new ScriptBundle("~/bundles/kendo").Include("~/Scripts/kendo/kendo.core.js", "~/Scripts/kendo/kendo.ui.core.js", "~/Scripts/kendo/kendo.data.js", "~/Scripts/kendo/kendo.list.js").IncludeDirectory("~/Scripts/kendo", "*.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/dynamic-kendo").Include("~/Scripts/dynamic.kendo.js"));
 

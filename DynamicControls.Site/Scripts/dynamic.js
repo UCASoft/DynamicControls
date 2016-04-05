@@ -91,13 +91,8 @@ function getChildData(parent) {
         parent.wrap("<form id=\"temp-dynamic-form\"/>");
         var form = parent.parent();
         var valid = form.valid();
-        if (valid) {
-            for (var i = 0; i < $.dynamic.validateParent.length; i++) {
-                if (!$.dynamic.validateParent[i](form)) {
-                    valid = false;
-                    break;
-                }
-            }
+        for (var i = 0; i < $.dynamic.validateParent.length; i++) {
+            valid = $.dynamic.validateParent[i](form) && valid;
         }
         parent.unwrap();
         if (!valid)
