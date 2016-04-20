@@ -1,6 +1,9 @@
 ﻿(function($) {
     $.dynamic.prepareDynamicControls.push(prepareDynamicKendoControls);
-    $.dynamic.validateParent.push(kendoValidate);
+
+    if ($.dynamic.validation) {
+        $.dynamic.validation.extensions.push(kendoValidate);
+    }   
 })(jQuery);
 
 $(document).ready(function () {
@@ -46,6 +49,8 @@ function onDropDownChange() {
     loadChilds(control);
 }
 
-function kendoValidate(form) {
-    return $(form).kendoValidator().data("kendoValidator").validate();
+function kendoValidate(parent) {
+    parent.find(".k-widget").each(function() {
+        var $this = $(this);
+    });
 }

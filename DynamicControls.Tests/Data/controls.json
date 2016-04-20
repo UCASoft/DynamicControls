@@ -54,7 +54,10 @@
                         {
                           "type": "RadioList",
                           "name": "radio-list",
-                          "label": "Content"
+                          "label": "Content",
+                          "checkedRoles": {
+                            "required": true
+                          }
                         }
                       ]
                     }

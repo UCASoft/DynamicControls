@@ -6,23 +6,6 @@
         $.dynamic.prepareDynamicControls = [];
     }
 
-    if (!$.dynamic.validateParent) {
-        $.dynamic.validateParent = [];
-    }
-
-    $.dynamic.validationAvailable = function() {
-        return $.validator || false;
-    }
-
-    if ($.dynamic.validationAvailable()) {
-        $.validator.setDefaults({
-            highlight: function(element, errorClass) {
-                $(element).addClass(errorClass);
-            },
-            errorPlacement: function () {}
-        });
-    }
-
 })(jQuery);
 
 $(document).ready(function () {
@@ -34,7 +17,7 @@ function addRadioChange(parent) {
         var $this = $(this);
         var control = $this.closest(".dynamic-control");
         control.attr("value", $this.val());
-        control.attr("text", $this.parent().text());
+        control.attr("text", $this.next("span").text());
         loadChilds(control);
     });
 }
@@ -87,16 +70,10 @@ function getAreaData(areaName) {
 
 function getChildData(parent) {
     var data = {};
-    if ($.dynamic.validationAvailable()) {
-        parent.wrap("<form id=\"temp-dynamic-form\"/>");
-        var form = parent.parent();
-        var valid = form.valid();
-        for (var i = 0; i < $.dynamic.validateParent.length; i++) {
-            valid = $.dynamic.validateParent[i](form) && valid;
-        }
-        parent.unwrap();
-        if (!valid)
+    if ($.dynamic.validation) {
+        if (!$.dynamic.validation.valid(parent)) {
             return null;
+        }
     }
     parent.find(".dynamic-control[value]").each(function() {
         var $this = $(this);

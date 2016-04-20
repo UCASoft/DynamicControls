@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
+
+using Newtonsoft.Json.Linq;
 
 namespace DynamicControls.Controls
 {
@@ -51,6 +54,24 @@ namespace DynamicControls.Controls
                 control.InnerHtml += span.ToString();
                 if (!pair.Equals(lastPair))
                     control.InnerHtml += "<br/>";
+            }
+        }
+
+        /// <summary>
+        /// The prepare checked roles.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="checkedRoles">
+        /// The checked roles.
+        /// </param>
+        protected override void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
+        {
+            if (checkedRoles.Value<bool>("required"))
+            {
+                Regex regex = new Regex(Regex.Escape("></input>"));
+                control.InnerHtml = regex.Replace(control.InnerHtml, " required=\"required\"></input>", 1);
             }
         }
     }

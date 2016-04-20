@@ -1,0 +1,10 @@
+﻿.error div span{
+    color: red;
+}
+.error input, .error select {
+    border: 1px red solid;
+}
+
+.error label {
+    color: red;
+}
