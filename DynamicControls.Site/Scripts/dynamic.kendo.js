@@ -50,7 +50,23 @@ function onDropDownChange() {
 }
 
 function kendoValidate(parent) {
+    var result = true;
     parent.find(".k-widget").each(function() {
         var $this = $(this);
+        var control = kendo.widgetInstance($this.find(".work-element"));
+        if ($this.hasClass("k-datepicker")) {
+            var input = $this.find("input");
+            if (input.attr("required") && !control.value()) {
+                $this.closest(".dynamic-control").addClass($.dynamic.validation.options.errorClass);
+                result = false;
+            }
+        } else if ($this.hasClass("k-dropdown")) {
+            var select = $this.find("select");
+            if (select.attr("required") && !control.value()) {
+                $this.closest(".dynamic-control").addClass($.dynamic.validation.options.errorClass);
+                result = false;
+            }
+        }
     });
+    return result;
 }

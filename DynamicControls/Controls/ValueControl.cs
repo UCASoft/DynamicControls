@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 
 using Newtonsoft.Json.Linq;
 
@@ -99,7 +100,7 @@ namespace DynamicControls.Controls
         /// </param>
         protected virtual void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
