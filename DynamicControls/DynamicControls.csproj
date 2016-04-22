@@ -105,6 +105,12 @@
     <Compile Include="Exceptions\UseLibraryKeyException.cs" />
     <Compile Include="IDynamicController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\DynamicValidator.cs" />
+    <Compile Include="Validation\ExcessDataError.cs" />
+    <Compile Include="Validation\MissingDataError.cs" />
+    <Compile Include="Validation\RequiredDataError.cs" />
+    <Compile Include="Validation\ValidationError.cs" />
+    <Compile Include="Validation\WrongDataError.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

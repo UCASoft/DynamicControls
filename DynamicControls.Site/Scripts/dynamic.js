@@ -65,19 +65,33 @@ function inputChange(input) {
 
 function getAreaData(areaName) {
     var area = $("#" + areaName + "[aria-dynamic = 'true']");
-    return getChildData(area);
+    var data = getChildData(area);
+    if (data)
+        data["area-name"] = areaName;
+    return data;
 }
 
-function getChildData(parent) {
+function getChildData(parent, inner) {
     var data = {};
     if ($.dynamic.validation) {
         if (!$.dynamic.validation.valid(parent)) {
             return null;
         }
     }
-    parent.find(".dynamic-control[value]").each(function() {
+    var controls = parent.find(".dynamic-control[value]");
+    if (!inner) {
+        controls = controls.not(function() {
+            return $(this).closest(".child-panel").hasClass("inner-childs");
+        });
+    }
+    controls.each(function() {
         var $this = $(this);
-        data[$this.attr("id")] = { 'value': $this.attr("value"), 'text': $this.attr("text") };
+        var dataFunction = $this.data("getDataFunction");
+        if (jQuery.isFunction(dataFunction)) {
+            data[$this.attr("id")] = dataFunction();
+        } else {
+            data[$this.attr("id")] = { 'value': $this.attr("value"), 'text': $this.attr("text") };
+        }
     });
     return data;
 }

@@ -29,10 +29,10 @@ namespace DynamicControls
         {
             if (areaControl != null)
             {
-                JObject requestControl =
-                    areaControl.SelectToken(string.Format("$.childs..controls[?(@.name == '{0}')]", parentName)) as JObject;
+                JObject requestControl = areaControl.SelectToken(string.Format("$.childs..controls[?(@.name == '{0}')]", parentName)) as JObject;
                 IDynamicParentControl control = BaseControl.CreateControl(requestControl) as IDynamicParentControl;
-                if (control != null) return new HtmlString(control.RenderChilds(parentValue));
+                if (control != null)
+                    return new HtmlString(control.RenderChilds(parentValue));
             }
             return null;
         }

@@ -60,7 +60,17 @@
     <script type="text/javascript">
         function getDynamicData() {
             var data = getAreaData("data-form");
-            alert(JSON.stringify(data));
+            if (data) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("SendData", "Home")",
+                    data: { "data": JSON.stringify(data) },
+                    dataType: "JSON",
+                    success: function(data) {
+                        alert(JSON.stringify(data));
+                    }
+                });
+            }
         }
     </script>
 }
