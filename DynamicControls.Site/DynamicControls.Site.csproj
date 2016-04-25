@@ -183,8 +183,6 @@
     <Content Include="Scripts\kendo\kendo.popup.min.js" />
     <Content Include="Scripts\kendo\kendo.ui.core.js" />
     <Content Include="Scripts\kendo\kendo.ui.core.min.js" />
-    <Content Include="Scripts\kendo\kendo.validator.js" />
-    <Content Include="Scripts\kendo\kendo.validator.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Web.config" />

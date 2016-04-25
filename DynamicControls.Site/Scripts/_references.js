@@ -14,4 +14,3 @@
 /// <reference path="kendo/kendo.list.js" />
 /// <reference path="kendo/kendo.popup.min.js" />
 /// <reference path="kendo/kendo.ui.core.js" />
-/// <reference path="kendo/kendo.validator.js" />

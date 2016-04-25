@@ -61,6 +61,7 @@ namespace DynamicControls.Controls
         protected override void PrepareBody(TagBuilder body)
         {
             body.MergeAttribute("value", DefaultValue);
+            body.MergeAttribute("text", string.Empty);
             if (!string.IsNullOrEmpty(ParentValue))
                 body.MergeAttribute("parent-value", ParentValue);
             PrepareBodyBeforeWorkControl(body);

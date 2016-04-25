@@ -43,6 +43,13 @@ function prepareDynamicBootstrapControl(control) {
                         label.append(span.text());
                         span.remove();
                         label.wrap($("<div class='radio'/>"));
+                        input.unbind("change").change(function() {
+                            var $this = $(this);
+                            var control = $this.closest(".dynamic-control");
+                            control.attr("value", $this.val());
+                            control.attr("text", $this.parent().text());
+                            loadChilds(control);
+                        });
                     });
                     $this.children("br").remove();
                 }

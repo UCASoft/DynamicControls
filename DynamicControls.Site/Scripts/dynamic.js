@@ -19,6 +19,10 @@ function addRadioChange(parent) {
         control.attr("value", $this.val());
         control.attr("text", $this.next("span").text());
         loadChilds(control);
+    }).filter(":checked").each(function() {
+        var $this = $(this);
+        var control = $this.closest(".dynamic-control");
+        control.attr("text", $this.next("span").text());
     });
 }
 

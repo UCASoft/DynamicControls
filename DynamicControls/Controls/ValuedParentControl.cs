@@ -13,6 +13,11 @@ namespace DynamicControls.Controls
     /// </typeparam>
     public abstract class ValuedParentControl<T> : ValueControl<T>, IDynamicParentControl where T : BaseControl, new()
     {
+        protected virtual bool InnerChildren
+        {
+            get { return false; }
+        }
+
         /// <summary>
         /// Gets a value indicating whether has childs.
         /// </summary>
@@ -136,6 +141,8 @@ namespace DynamicControls.Controls
             if (HasChilds)
             {
                 TagBuilder childPanel = CreateChildPanel();
+                if (InnerChildren)
+                    childPanel.AddCssClass("inner-child");
                 childPanel.InnerHtml += RenderChilds(SendingValue);
                 body.InnerHtml += childPanel.ToString();
             }

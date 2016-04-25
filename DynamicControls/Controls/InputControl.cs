@@ -49,7 +49,10 @@ namespace DynamicControls.Controls
         {
             string value = DefaultValue;
             if (!string.IsNullOrEmpty(value))
+            {
                 control.Attributes.Add("value", value);
+                control.Attributes.Add("text", value);
+            }
         }
     }
 }

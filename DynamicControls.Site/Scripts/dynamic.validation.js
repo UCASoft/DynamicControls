@@ -43,20 +43,25 @@
             control.addClass(this.options.errorClass);
         },
 
-        valid: function (parent) {
+        valid: function(parent) {
             var self = this;
             var $parent = $(parent);
             var result = true;
             $parent.find(".dynamic-control").removeClass(self.options.errorClass).each(function() {
                 var control = $(this);
-                var $element = control.find(".work-element").eq(0);
-                var element = $element[0];
-                if (element.tagName === "INPUT") {
-                    result = self._checkInput(control, $element) && result;
-                } else if (element.tagName === "DIV") {
-                    result = self._checkDiv(control, $element) && result;
-                } else if (element.tagName === "SELECT") {
-                    result = self._checkSelect(control, $element) && result;
+                var innerParent = control.closest(".child-panel");
+                if (!innerParent.hasClass("inner-child") || innerParent.text() === parent.text()) {
+                    var $element = control.find(".work-element").eq(0);
+                    if ($element.length === 1) {
+                        var element = $element[0];
+                        if (element.tagName === "INPUT") {
+                            result = self._checkInput(control, $element) && result;
+                        } else if (element.tagName === "DIV") {
+                            result = self._checkDiv(control, $element) && result;
+                        } else if (element.tagName === "SELECT") {
+                            result = self._checkSelect(control, $element) && result;
+                        }
+                    }
                 }
             });
             for (var i = 0; i < this.extensions.length; i++) {
