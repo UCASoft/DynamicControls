@@ -23,23 +23,6 @@ namespace DynamicControls.Controls
         }
 
         /// <summary>
-        /// The prepare checked roles.
-        /// </summary>
-        /// <param name="control">
-        /// The control.
-        /// </param>
-        /// <param name="checkedRoles">
-        /// The checked roles.
-        /// </param>
-        protected override void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
-        {
-            if (checkedRoles.Value<bool>("required"))
-            {
-                control.Attributes.Add("required", "required");
-            }
-        }
-
-        /// <summary>
         /// The set default value.
         /// </summary>
         /// <param name="control">

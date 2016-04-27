@@ -85,7 +85,7 @@ function getChildData(parent, inner) {
     var controls = parent.find(".dynamic-control[value]");
     if (!inner) {
         controls = controls.not(function() {
-            return $(this).closest(".child-panel").hasClass("inner-childs");
+            return $(this).closest(".child-panel").hasClass("inner-child");
         });
     }
     controls.each(function() {

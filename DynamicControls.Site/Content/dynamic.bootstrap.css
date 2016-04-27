@@ -1,0 +1,7 @@
+﻿.has-error .inner-child label {
+    color: #515967;
+}
+
+.has-error>.form-group label.control-label {
+    color: #a94442;
+}

@@ -101,7 +101,10 @@ namespace DynamicControls.Controls
         /// </param>
         protected virtual void PrepareCheckedRoles(TagBuilder control, JObject checkedRoles)
         {
-            throw new NotImplementedException();
+            if (checkedRoles.Value<bool>("required"))
+            {
+                control.Attributes.Add("required", "required");
+            }
         }
 
         /// <summary>
