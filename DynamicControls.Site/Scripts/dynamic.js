@@ -70,9 +70,12 @@ function inputChange(input) {
 function getAreaData(areaName) {
     var area = $("#" + areaName + "[aria-dynamic = 'true']");
     var data = getChildData(area);
-    if (data)
-        data["area-name"] = areaName;
-    return data;
+    if (data) {
+        var result = {};
+        result[areaName] = data;
+        return result;
+    }
+    return null;
 }
 
 function getChildData(parent, inner) {

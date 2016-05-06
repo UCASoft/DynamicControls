@@ -36,7 +36,11 @@ namespace DynamicControls.Site.Controllers
         {
             List<ValidationError> result = new List<ValidationError>();
             JObject parseData = JObject.Parse(data);
-            DynamicValidator.ValidateData(Session[DynamicControlsBuilder.GetAreaTempDataKey(parseData.Value<string>("area-name"))] as JObject, parseData, result);
+            JProperty first = parseData.First as JProperty;
+            if (first != null)
+            {
+                DynamicValidator.ValidateData(Session[DynamicControlsBuilder.GetAreaTempDataKey(first.Name)] as JObject, first.Value as JObject, result);
+            }
             return Json(result);
         }
     }

@@ -50,7 +50,7 @@ namespace DynamicControls.Validation
             List<ValidationError> errorList = new List<ValidationError>();
             JObject checkedData = JObject.Parse(data.ToString());
             ValidateValues(controls.Value<JArray>("childs").First().Value<JArray>("controls"), checkedData, errorList);
-            IEnumerable<JProperty> excessDatas = checkedData.OfType<JProperty>().Where(p => p.Name != "area-name" && !p.First.Value<bool>("checked"));
+            IEnumerable<JProperty> excessDatas = checkedData.OfType<JProperty>().Where(p => !p.First.Value<bool>("checked"));
             errorList.AddRange(excessDatas.Select(excessData => new ExcessDataError(excessData.Name)));
             return errorList;
         }
