@@ -1,20 +1,21 @@
 ﻿(function($) {
     $.dynamic.prepareDynamicControls.push(prepareDynamicKendoControls);
+    $.dynamic.binds.push(function() {
+        prepareDynamicKendoControls($("[aria-dynamic = 'true']"));
+    });
 
     if ($.dynamic.validation) {
         $.dynamic.validation.extensions.push(kendoValidate);
-    }   
+    }
+
 })(jQuery);
 
-$(document).ready(function () {
-    prepareDynamicKendoControls($("[aria-dynamic = 'true']"));
-});
 
 function prepareDynamicKendoControls(parentPanel) {
-    $(parentPanel).find("input[type = 'date']").removeAttr("onchange").kendoDatePicker({
+    $(parentPanel).find("input[type = 'date']").not("[custom-creating=\"true\"]").removeAttr("onchange").kendoDatePicker({
         change: onDateChange
     });
-    $(parentPanel).find("select").removeAttr("onchange").width("270px").each(function() {
+    $(parentPanel).find("select").not("[custom-creating=\"true\"]").removeAttr("onchange").width("270px").each(function() {
         var $this = $(this);
         var nullOptions = $this.children("[value = 'nullRow']");
         var hasNullOption = nullOptions.length === 1;

@@ -61,7 +61,7 @@ namespace DynamicControls.Controls
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        private static string RenderOption(string key, string value)
+        protected static string RenderOption(string key, string value)
         {
             var option = new TagBuilder("option");
             option.Attributes.Add("value", key);

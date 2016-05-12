@@ -2,19 +2,19 @@
 
     $.dynamic.prepareDynamicControls.push(prepareDynamicBootstrapControls);
 
+    $.dynamic.binds.push(function() {
+        var area = $("[aria-dynamic = 'true']");
+        area.addClass("row");
+        var mainChildPanel = area.children(".child-panel");
+        mainChildPanel.addClass("col-lg-10 col-lg-offset-1");
+        prepareDynamicBootstrapControls(mainChildPanel);
+    });
+
     if ($.dynamic.validation) {
         $.dynamic.validation.options.errorClass = "has-error";
     }
 
 })(jQuery);
-
-$(document).ready(function () {
-    var area = $("[aria-dynamic = 'true']");
-    area.addClass("row");
-    var mainChildPanel = area.children(".child-panel");
-    mainChildPanel.addClass("col-lg-10 col-lg-offset-1");
-    prepareDynamicBootstrapControls(mainChildPanel);
-});
 
 function prepareDynamicBootstrapControls(parentPanel) {
     var controls = $(parentPanel).children(".dynamic-control");
@@ -58,7 +58,7 @@ function prepareDynamicBootstrapControl(control) {
                 if ($this.attr("type") === "checkbox") {
                     var parent = $this.closest(".form-group");
                     parent.removeClass("form-group").addClass("checkbox");
-                    var label = $("<label/>");
+		    var label = $("<label class='dynamic-checkbox'/>");
                     label.append($this);
                     var span = parent.children("span");
                     label.append(span.text());

@@ -52,7 +52,7 @@ namespace DynamicControls.Controls
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        public string RenderChilds(string parentValue)
+        public virtual string RenderChilds(string parentValue)
         {
             string childsRender = string.Empty;
             JArray childs = Data.Value<JArray>("childs");
@@ -90,7 +90,7 @@ namespace DynamicControls.Controls
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        internal static string RenderAnyChilds(JArray childs, string parentValue)
+        internal protected static string RenderAnyChilds(JArray childs, string parentValue)
         {
             return RenderChildsByValue(childs, "any", parentValue);
         }
@@ -113,7 +113,7 @@ namespace DynamicControls.Controls
         /// <exception cref="MissingControlsException">
         /// The child object must have controls property.
         /// </exception>
-        internal static string RenderChildsByValue(JArray childs, string key, string parentValue)
+        internal protected static string RenderChildsByValue(JArray childs, string key, string parentValue)
         {
             string childsRender = string.Empty;
             JObject valueChilds = GetChildByKey(childs, key);

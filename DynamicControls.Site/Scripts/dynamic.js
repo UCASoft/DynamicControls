@@ -6,10 +6,20 @@
         $.dynamic.prepareDynamicControls = [];
     }
 
+    if (!$.dynamic.bind) {
+        $.dynamic.binds = [];
+        $.dynamic.bind = function () {
+            addRadioChange($("[aria-dynamic = 'true']"));
+            for (var i = 0; i < $.dynamic.binds.length; i++) {
+                $.dynamic.binds[i]();
+            }
+        }
+    }
+
 })(jQuery);
 
 $(document).ready(function () {
-    addRadioChange($("[aria-dynamic = 'true']"));
+    $.dynamic.bind();
 });
 
 function addRadioChange(parent) {
@@ -19,7 +29,7 @@ function addRadioChange(parent) {
         control.attr("value", $this.val());
         control.attr("text", $this.next("span").text());
         loadChilds(control);
-    }).filter(":checked").each(function() {
+    }).filter(":checked").each(function () {
         var $this = $(this);
         var control = $this.closest(".dynamic-control");
         control.attr("text", $this.next("span").text());
@@ -31,7 +41,7 @@ function loadChilds(control) {
     var value = control.attr("value");
     var childPanel = control.children(".child-panel");
     if (childPanel.length === 1) {
-        $.post("GetChilds", { areaName: control.closest("[aria-dynamic = 'true']").attr("id"), parentName: name, parentValue: value }, function(data) {
+        $.post("GetChilds", { areaName: control.closest("[aria-dynamic = 'true']").attr("id"), parentName: name, parentValue: value }, function (data) {
             childPanel.html(data);
             addRadioChange(childPanel);
             for (var i = 0; i < $.dynamic.prepareDynamicControls.length; i++) {
@@ -87,17 +97,18 @@ function getChildData(parent, inner) {
     }
     var controls = parent.find(".dynamic-control[value]");
     if (!inner) {
-        controls = controls.not(function() {
-            return $(this).closest(".child-panel").hasClass("inner-child");
+        controls = controls.not(function () {
+            var $this = $(this);
+            return $this.closest(".child-panel").hasClass("inner-child") || $this.hasClass("inner-control");
         });
     }
-    controls.each(function() {
+    controls.each(function () {
         var $this = $(this);
         var dataFunction = $this.data("getDataFunction");
         if (jQuery.isFunction(dataFunction)) {
             data[$this.attr("id")] = dataFunction();
         } else {
-            data[$this.attr("id")] = { 'value': $this.attr("value"), 'text': $this.attr("text") };
+            data[$this.attr("id")] = {'value': $this.attr("value"),'text':  $this.attr("text")};
         }
     });
     return data;
