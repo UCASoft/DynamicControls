@@ -1,21 +1,33 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Kendo base CSS */
 .fake {
   color: red;
+}
+.k-common-test-class {
+  opacity: 0;
 }
 .k-reset {
   margin: 0;
@@ -1427,6 +1439,14 @@ html .k-error-colored {
 .k-loading-mask {
   z-index: 100;
 }
+.k-loading-mask .k-loading-progress {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 .k-loading-text {
   text-indent: -4000px;
   text-align: center;
@@ -1529,6 +1549,33 @@ html .k-error-colored {
   background: #f00;
   position: absolute;
 }
+.k-current-time-arrow-down {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid #f00;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.k-current-time-arrow-left {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-right: 4px solid #f00;
+}
+.k-current-time-arrow-right {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid transparent;
+  border-left: 4px solid #f00;
+  border-right: 4px solid transparent;
+}
 /* override box sizing for grid layout framework integration (Bootstrap 3, Foundation 4) */
 .k-animation-container,
 .k-widget,
@@ -1578,6 +1625,11 @@ input.k-checkbox,
   opacity: 0;
   width: 0;
   margin: 0;
+  -webkit-appearance: none;
+  overflow: hidden;
+}
+.k-ff input.k-checkbox,
+.k-ff .k-radio {
   position: absolute;
 }
 .k-checkbox-label {
@@ -1599,6 +1651,23 @@ input.k-checkbox,
   font-size: 1em;
   line-height: 1em;
   text-align: center;
+}
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+  border-width: 1px;
+  border-style: solid;
+  width: 8px;
+  height: 8px;
+  font-size: 1em;
+  text-align: center;
+  content: " ";
+  margin-left: -2px;
 }
 .k-checkbox:checked + .k-checkbox-label:before {
   content: "\2713";
@@ -2589,6 +2658,10 @@ span.k-dropdown,
 .k-header-column-menu {
   -webkit-touch-callout: none;
 }
+.k-list-scroller {
+  position: relative;
+  overflow: auto;
+}
 .k-popup.k-list-container,
 .k-popup.k-calendar-container {
   -webkit-touch-callout: none;
@@ -2796,7 +2869,7 @@ body .k-datetimepicker .k-select {
   border: 0;
 }
 .k-list {
-  height: 100%;
+  height: auto;
 }
 .k-popup .k-list .k-item,
 .k-fieldselector .k-list .k-item,
@@ -2806,6 +2879,25 @@ body .k-datetimepicker .k-select {
   padding: 1px 5px 1px 5px;
   line-height: 1.8em;
   min-height: 1.8em;
+}
+.k-popup .k-list .k-item {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  padding: 0 4px;
+}
+.k-popup .k-list .k-item > .k-group {
+  top: -1px;
+}
+.k-group-header + div > .k-list > .k-item.k-first:before {
+  content: " ";
+  display: block;
+  border-top-width: 1px;
+  border-top-style: solid;
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
 }
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
@@ -2835,6 +2927,7 @@ body .k-datetimepicker .k-select {
 }
 .k-list-filter {
   position: relative;
+  margin-bottom: 2px;
 }
 .k-list-filter > .k-textbox {
   padding-right: 20px;
@@ -2843,7 +2936,16 @@ body .k-datetimepicker .k-select {
 .k-list-filter > .k-icon {
   position: absolute;
   right: 6px;
-  top: 1px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+.km-root .k-list-filter > .k-textbox {
+  padding-left: 0;
+  padding-right: 0;
+  border-left-width: 0;
+  border-right-width: 0;
 }
 /* MultiSelect */
 .k-multiselect-wrap {
@@ -3092,16 +3194,16 @@ div.k-flatcolorpicker {
   margin-left: -5px;
   margin-top: -5px;
   border-radius: 6px;
-  -webkit-box-shadow: 0 1px 2px #444444;
-          box-shadow: 0 1px 2px #444444;
+  -webkit-box-shadow: 0 1px 2px #444;
+          box-shadow: 0 1px 2px #444;
   background: transparent;
 }
 .k-flatcolorpicker .k-hsv-rectangle .k-draghandle:hover,
 .k-flatcolorpicker .k-hsv-rectangle .k-draghandle:focus {
   background: transparent;
   border-color: #fff;
-  -webkit-box-shadow: 0 1px 5px #000000;
-          box-shadow: 0 1px 5px #000000;
+  -webkit-box-shadow: 0 1px 5px #000;
+          box-shadow: 0 1px 5px #000;
 }
 .k-flatcolorpicker .k-hsv-rectangle.k-dragging,
 .k-flatcolorpicker .k-hsv-rectangle.k-dragging * {
@@ -3131,8 +3233,8 @@ div.k-flatcolorpicker {
   margin-top: 1px;
   height: 8px;
   width: 8px;
-  -webkit-box-shadow: 0 1px 4px #444444;
-          box-shadow: 0 1px 4px #444444;
+  -webkit-box-shadow: 0 1px 4px #444;
+          box-shadow: 0 1px 4px #444;
 }
 .k-flatcolorpicker .k-hue-slider .k-draghandle:hover,
 .k-flatcolorpicker .k-transparency-slider .k-draghandle:hover,
@@ -3140,8 +3242,8 @@ div.k-flatcolorpicker {
 .k-flatcolorpicker .k-transparency-slider .k-draghandle:focus {
   background: transparent;
   border-color: #fff;
-  -webkit-box-shadow: 0 1px 5px #000000;
-          box-shadow: 0 1px 5px #000000;
+  -webkit-box-shadow: 0 1px 5px #000;
+          box-shadow: 0 1px 5px #000;
   border-width: 2px;
   padding: 1px;
 }
@@ -3397,7 +3499,9 @@ div.k-flatcolorpicker {
           transform-origin: 0 100%;
 }
 .k-ie8 .k-progressbar-vertical .k-progress-status {
-  writing-mode: bt-lr;
+  -webkit-writing-mode: bt-lr;
+      -ms-writing-mode: bt-lr;
+          writing-mode: bt-lr;
   padding: .5em 0;
 }
 /* Slider */
@@ -4577,6 +4681,10 @@ input.k-textbox {
 }
 .k-toolbar .k-button-group .k-button {
   margin: 0;
+}
+.k-checkbox-label,
+.k-radio-label {
+  display: inline;
 }
 .k-checkbox-label:before,
 .k-checkbox-label:after,
