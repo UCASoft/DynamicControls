@@ -10,6 +10,6 @@ namespace DynamicControls.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="MissingControlsException"/> class.
         /// </summary>
-        public MissingControlsException() : base("Array 'controls' must be in 'childs' property!") {}
+        public MissingControlsException() : base("Array 'controls' must be in 'childs' property!") { }
     }
 }

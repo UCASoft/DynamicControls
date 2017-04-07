@@ -11,6 +11,6 @@
         /// <param name="controlName">
         /// The control name.
         /// </param>
-        public RequiredDataError(string controlName) : base(string.Format("Field '{0}' is required!", controlName)) {}
+        public RequiredDataError(string controlName) : base(string.Format("Field '{0}' is required!", controlName)) { }
     }
 }

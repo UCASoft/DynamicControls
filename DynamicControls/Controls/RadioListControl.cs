@@ -47,13 +47,17 @@ namespace DynamicControls.Controls
                 input.Attributes.Add("name", Name);
                 input.Attributes.Add("value", pair.Key);
                 if (pair.Key.Equals(defaultValue))
+                {
                     input.Attributes.Add("checked", "checked");
+                }
                 control.InnerHtml += input.ToString();
                 TagBuilder span = new TagBuilder("span");
                 span.SetInnerText(pair.Value);
                 control.InnerHtml += span.ToString();
                 if (!pair.Equals(lastPair))
+                {
                     control.InnerHtml += "<br/>";
+                }
             }
         }
 

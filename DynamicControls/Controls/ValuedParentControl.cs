@@ -13,6 +13,9 @@ namespace DynamicControls.Controls
     /// </typeparam>
     public abstract class ValuedParentControl<T> : ValueControl<T>, IDynamicParentControl where T : BaseControl, new()
     {
+        /// <summary>
+        /// Gets a value indicating whether inner children.
+        /// </summary>
         protected virtual bool InnerChildren
         {
             get { return false; }
@@ -60,7 +63,9 @@ namespace DynamicControls.Controls
             {
                 childsRender += RenderAnyChilds(childs, parentValue);
                 if (!string.IsNullOrEmpty(parentValue))
+                {
                     childsRender += RenderChildsByValue(childs, parentValue);
+                }
             }
             return childsRender;
         }
@@ -90,7 +95,7 @@ namespace DynamicControls.Controls
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        internal protected static string RenderAnyChilds(JArray childs, string parentValue)
+        protected internal static string RenderAnyChilds(JArray childs, string parentValue)
         {
             return RenderChildsByValue(childs, "any", parentValue);
         }
@@ -113,7 +118,7 @@ namespace DynamicControls.Controls
         /// <exception cref="MissingControlsException">
         /// The child object must have controls property.
         /// </exception>
-        internal protected static string RenderChildsByValue(JArray childs, string key, string parentValue)
+        protected internal static string RenderChildsByValue(JArray childs, string key, string parentValue)
         {
             string childsRender = string.Empty;
             JObject valueChilds = GetChildByKey(childs, key);
@@ -125,7 +130,9 @@ namespace DynamicControls.Controls
                     childsRender = controls.Values<JObject>().Aggregate(childsRender, (current, control) => current + CreateControl(control, parentValue).Render());
                 }
                 else
+                {
                     throw new MissingControlsException();
+                }
             }
             return childsRender;
         }
@@ -142,7 +149,9 @@ namespace DynamicControls.Controls
             {
                 TagBuilder childPanel = CreateChildPanel();
                 if (InnerChildren)
+                {
                     childPanel.AddCssClass("inner-child");
+                }
                 childPanel.InnerHtml += RenderChilds(SendingValue);
                 body.InnerHtml += childPanel.ToString();
             }
@@ -165,7 +174,9 @@ namespace DynamicControls.Controls
             IDynamicRenderControl renderControl = CreateControl(control) as IDynamicRenderControl;
             IDynamicValueControl valueControl = renderControl as IDynamicValueControl;
             if (valueControl != null)
+            {
                 valueControl.SetParentValue(parentValue);
+            }
             return renderControl;
         }
 

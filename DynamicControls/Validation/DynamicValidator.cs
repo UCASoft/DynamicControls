@@ -43,7 +43,7 @@ namespace DynamicControls.Validation
         /// The data.
         /// </param>
         /// <returns>
-        /// The <see cref="List"/>.
+        /// The <see><cref>List</cref></see>.
         /// </returns>
         public static List<ValidationError> ValidateData(JObject controls, JObject data)
         {

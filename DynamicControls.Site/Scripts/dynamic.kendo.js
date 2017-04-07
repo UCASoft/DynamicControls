@@ -43,7 +43,7 @@ function prepareDynamicKendoControls(parentPanel) {
 
 function onDateChange() {
     var control = this.element.closest(".dynamic-control");
-    control.attr("value", this.value());
+    control.attr("value", kendo.toString(this.value(), 'yyyy-MM-dd'));
     control.attr("text", kendo.toString(this.value(), 'd'));
     loadChilds(control);
 }

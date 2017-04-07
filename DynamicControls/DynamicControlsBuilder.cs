@@ -59,19 +59,6 @@ namespace DynamicControls
         }
 
         /// <summary>
-        /// Load input data.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>
-        /// The <see cref="DynamicControlsBuilder"/>.
-        /// </returns>
-        public DynamicControlsBuilder LoadData(string data)
-        {
-            this.data = data;
-            return this;
-        }
-
-        /// <summary>
         /// The get area temp data key.
         /// </summary>
         /// <param name="name">
@@ -83,6 +70,19 @@ namespace DynamicControls
         public static string GetAreaTempDataKey(string name)
         {
             return string.Format(AreaDataKey, name);
+        }
+
+        /// <summary>
+        /// Load input data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// The <see cref="DynamicControlsBuilder"/>.
+        /// </returns>
+        public DynamicControlsBuilder LoadData(string data)
+        {
+            this.data = data;
+            return this;
         }
 
         /// <summary>

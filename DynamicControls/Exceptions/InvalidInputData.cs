@@ -5,5 +5,5 @@ namespace DynamicControls.Exceptions
     /// <summary>
     /// The invalid input data.
     /// </summary>
-    public class InvalidInputData : Exception {}
+    public class InvalidInputData : Exception { }
 }

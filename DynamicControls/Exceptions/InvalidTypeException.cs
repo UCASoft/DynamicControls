@@ -13,6 +13,6 @@ namespace DynamicControls.Exceptions
         /// <param name="type">
         /// The type.
         /// </param>
-        public InvalidTypeException(string type) : base(string.Format("Property type must by equals '{0}'!", type)) {}
+        public InvalidTypeException(string type) : base(string.Format("Property type must by equals '{0}'!", type)) { }
     }
 }

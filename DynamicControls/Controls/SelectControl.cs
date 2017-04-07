@@ -44,9 +44,13 @@ namespace DynamicControls.Controls
         protected override void BindDataSource(TagBuilder control, DynamicDataSource dataSource, string defaultValue)
         {
             if (NullRow)
+            {
                 control.InnerHtml += RenderOption(DynamicDataSource.NullRowKey, string.Empty, false);
-            foreach (KeyValuePair<string, string> pair in dataSource)            
+            }
+            foreach (KeyValuePair<string, string> pair in dataSource)
+            {
                 control.InnerHtml += RenderOption(pair.Key, pair.Value, defaultValue == pair.Key);
+            }
         }
 
         /// <summary>

@@ -13,8 +13,6 @@ namespace DynamicControls.Exceptions
         /// <param name="key">
         /// The key.
         /// </param>
-        public UseLibraryKeyException(string key) : base(string.Format("You try to use the library reserved key '{0}'!", key))
-        {
-        }
+        public UseLibraryKeyException(string key) : base(string.Format("You try to use the library reserved key '{0}'!", key)) { }
     }
 }

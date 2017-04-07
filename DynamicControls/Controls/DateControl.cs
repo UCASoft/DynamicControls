@@ -70,12 +70,16 @@ namespace DynamicControls.Controls
                 string date = expression.Substring(0, 10);
                 int[] dates = date.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Select(d => Convert.ToInt32(d)).ToArray();
                 if (dates.Length != 3)
+                {
                     throw new InvalidRoleExpression(expression);
+                }
                 startDate = new DateTime(dates[2], dates[1], dates[0]);
             }
             int addStartIndex = expression.IndexOf("+", StringComparison.Ordinal);
             if (addStartIndex == -1)
+            {
                 addStartIndex = expression.IndexOf("-", StringComparison.Ordinal);
+            }
             if (addStartIndex > -1)
             {
                 int direct = expression[addStartIndex] == '+' ? 1 : -1;

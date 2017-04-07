@@ -11,6 +11,6 @@
         /// <param name="message">
         /// The message.
         /// </param>
-        public WrongDataError(string message) : base(message) {}
+        public WrongDataError(string message) : base(message) { }
     }
 }

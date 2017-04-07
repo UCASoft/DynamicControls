@@ -11,6 +11,6 @@
         /// <param name="controlName">
         /// The control name.
         /// </param>
-        public MissingDataError(string controlName) : base(string.Format("Didn't find data for control '{0}'!", controlName)) {}
+        public MissingDataError(string controlName) : base(string.Format("Didn't find data for control '{0}'!", controlName)) { }
     }
 }

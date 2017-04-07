@@ -11,6 +11,6 @@
         /// <param name="dataFieldName">
         /// The data field name.
         /// </param>
-        public ExcessDataError(string dataFieldName) : base(string.Format("The control '{0}' isn't described!", dataFieldName)) {}
+        public ExcessDataError(string dataFieldName) : base(string.Format("The control '{0}' isn't described!", dataFieldName)) { }
     }
 }

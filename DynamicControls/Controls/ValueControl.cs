@@ -62,7 +62,9 @@ namespace DynamicControls.Controls
             body.MergeAttribute("value", DefaultValue);
             body.MergeAttribute("text", string.Empty);
             if (!string.IsNullOrEmpty(ParentValue))
+            {
                 body.MergeAttribute("parent-value", ParentValue);
+            }
             PrepareBodyBeforeWorkControl(body);
             TagBuilder workControl = PrepareWorkControl();
             body.InnerHtml += workControl.ToString();

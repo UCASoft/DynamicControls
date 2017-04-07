@@ -41,10 +41,14 @@ namespace DynamicControls.Controls
             {
                 GetTypeDelegate getTypeDelegate = HttpContext.Current.Session[DynamicControlsBuilder.GetTypeDelegateKey] as GetTypeDelegate;
                 if (getTypeDelegate != null)
+                {
                     type = getTypeDelegate(typeCode);
+                }
             }
             if (type == null)
+            {
                 throw new TypeLoadException();
+            }
             IDynamicControl renderControl = Activator.CreateInstance(type) as IDynamicControl;
             if (renderControl != null)
             {

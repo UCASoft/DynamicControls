@@ -12,6 +12,9 @@ namespace DynamicControls.Controls
     /// </typeparam>
     public class ParentControl<T> : BaseControl<T>, IDynamicParentControl where T : BaseControl, new()
     {
+        /// <summary>
+        /// Gets a value indicating whether inner children.
+        /// </summary>
         protected virtual bool InnerChildren
         {
             get { return false; }
@@ -57,7 +60,9 @@ namespace DynamicControls.Controls
             {
                 TagBuilder childPanel = ValuedParentControl<T>.CreateChildPanel();
                 if (InnerChildren)
+                {
                     childPanel.AddCssClass("inner-child");
+                }
                 childPanel.InnerHtml += RenderChilds(string.Empty);
                 body.InnerHtml += childPanel.ToString();
             }
