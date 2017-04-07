@@ -82,14 +82,7 @@ namespace DynamicControls.Validation
                         JObject dataObject = dataValue.First as JObject;
                         if (dataObject != null)
                         {
-                            JObject roles = child["checkedRoles"] as JObject;
-                            if (roles != null)
-                            {
-                                if (roles.Value<bool>("required") && string.IsNullOrEmpty(dataObject.Value<string>("value")))
-                                {
-                                    errorList.Add(new RequiredDataError(child.Value<string>("name")));
-                                }
-                            }
+                            CheckRoles(dataObject, child, errorList);
                             dataObject.Add(new JProperty("checked", true));
                         }
                     }
@@ -118,6 +111,30 @@ namespace DynamicControls.Validation
                             }
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The check roles.
+        /// </summary>
+        /// <param name="dataObject">
+        /// The data object.
+        /// </param>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="errorList">
+        /// The error list.
+        /// </param>
+        private static void CheckRoles(JToken dataObject, JObject control, ICollection<ValidationError> errorList)
+        {
+            JObject roles = control["checkedRoles"] as JObject;
+            if (roles != null)
+            {
+                if (roles.Value<bool>("required") && string.IsNullOrEmpty(dataObject.Value<string>("value")))
+                {
+                    errorList.Add(new RequiredDataError(control.Value<string>("name")));
                 }
             }
         }
