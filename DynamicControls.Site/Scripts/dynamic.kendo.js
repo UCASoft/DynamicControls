@@ -18,20 +18,25 @@ function prepareDynamicKendoControls(parentPanel) {
     $(parentPanel).find("select").not("[custom-creating=\"true\"]").removeAttr("onchange").width("270px").each(function() {
         var $this = $(this);
         var nullOptions = $this.children("[value = 'nullRow']");
+        var selectedOption = $this.children("[selected = 'selected']");
         var hasNullOption = nullOptions.length === 1;
         nullOptions.remove();
+        var kendoDropDownList;
         if (hasNullOption) {
-            $this.kendoDropDownList({
+            kendoDropDownList = $this.kendoDropDownList({
                 change: onDropDownChange,
                 width: "270px",
                 optionLabel: " ",
                 value: " "
-            });
+            }).data("kendoDropDownList");
         } else {
-            $this.kendoDropDownList({
+            kendoDropDownList = $this.kendoDropDownList({
                 change: onDropDownChange,
                 width: "270px"
-            });
+            }).data("kendoDropDownList");
+        }
+        if (selectedOption) {
+            kendoDropDownList.value(selectedOption.val());
         }
     });
 }

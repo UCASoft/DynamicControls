@@ -44,9 +44,9 @@ namespace DynamicControls.Controls
         protected override void BindDataSource(TagBuilder control, DynamicDataSource dataSource, string defaultValue)
         {
             if (NullRow)
-                control.InnerHtml += RenderOption(DynamicDataSource.NullRowKey, string.Empty);
+                control.InnerHtml += RenderOption(DynamicDataSource.NullRowKey, string.Empty, false);
             foreach (KeyValuePair<string, string> pair in dataSource)            
-                control.InnerHtml += RenderOption(pair.Key, pair.Value);
+                control.InnerHtml += RenderOption(pair.Key, pair.Value, defaultValue == pair.Key);
         }
 
         /// <summary>
@@ -58,13 +58,20 @@ namespace DynamicControls.Controls
         /// <param name="value">
         /// The value.
         /// </param>
+        /// <param name="isSelected">
+        /// Is option selected.
+        /// </param>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        protected static string RenderOption(string key, string value)
+        private static string RenderOption(string key, string value, bool isSelected)
         {
             var option = new TagBuilder("option");
             option.Attributes.Add("value", key);
+            if (isSelected)
+            {
+                option.Attributes.Add("selected", "selected");
+            }
             option.SetInnerText(value);
             return option.ToString();
         }

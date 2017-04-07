@@ -20,5 +20,19 @@ namespace DynamicControls.Controls
             control.Attributes["onchange"] = "checkBoxChange(this);";
             return control;
         }
+
+        /// <summary>
+        /// The set default value.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        protected override void SetDefaultValue(TagBuilder control)
+        {
+            if (DefaultValue == "1")
+            {
+                control.Attributes.Add("checked", "checked");
+            }
+        }
     }
 }

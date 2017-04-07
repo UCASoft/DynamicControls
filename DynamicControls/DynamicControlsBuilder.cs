@@ -37,9 +37,14 @@ namespace DynamicControls
         private readonly string controls;
 
         /// <summary>
+        /// The data.
+        /// </summary>
+        private string data;
+
+        /// <summary>
         /// The postfix.
         /// </summary>
-        private string postfix;
+        private string postfix;        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicControlsBuilder"/> class.
@@ -51,6 +56,19 @@ namespace DynamicControls
         {
             postfix = string.Empty;
             this.controls = controls;
+        }
+
+        /// <summary>
+        /// Load input data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// The <see cref="DynamicControlsBuilder"/>.
+        /// </returns>
+        public DynamicControlsBuilder LoadData(string data)
+        {
+            this.data = data;
+            return this;
         }
 
         /// <summary>
@@ -77,6 +95,8 @@ namespace DynamicControls
         {
             JObject control = JObject.Parse(controls);
             ApplyPostfix(control);
+            JObject inputData = JObject.Parse(data);
+            ApplyData(control, inputData);
             AreaControl areaControl = AreaControl.Parse(control);
             HttpContext.Current.Session[GetAreaTempDataKey(areaControl.Name)] = control;
             return areaControl.Render();
@@ -155,6 +175,41 @@ namespace DynamicControls
                         foreach (JObject childControl in childControls.OfType<JObject>())
                         {
                             ApplyPostfix(childControl);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The apply data.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        private void ApplyData(JObject control, JObject data)
+        {
+            JProperty form = data.First as JProperty;
+            if (form != null && control.Value<string>("name") == form.Name)
+            {
+                JObject innerData = form.Value as JObject;
+                if (innerData != null)
+                {
+                    foreach (JProperty property in innerData.Properties())
+                    {
+                        JObject childControl = control.SelectToken(string.Format("$..*[?(@.name == '{0}')]", property.Name)) as JObject;
+                        if (childControl != null)
+                        {
+                            JToken defaulValue = childControl["defaultValue"];
+                            if (defaulValue == null)
+                            {
+                                defaulValue = new JProperty("defaultValue");
+                                childControl.Add(defaulValue);
+                            }
+                            childControl["defaultValue"] = property.Value.Value<string>("value");
                         }
                     }
                 }
