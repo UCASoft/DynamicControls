@@ -1,5 +1,5 @@
 /** 
- * Copyright 2016 Telerik AD                                                                                                                                                                            
+ * Copyright 2017 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -84,6 +84,7 @@
                     options.index = index;
                 }
                 that._initialIndex = options.index;
+                that.requireValueMapper(that.options);
                 that._initList();
                 that._cascade();
                 if (options.autoBind) {
@@ -127,6 +128,7 @@
                 animation: {},
                 filter: 'none',
                 minLength: 1,
+                enforceMinLength: false,
                 virtual: false,
                 template: null,
                 valueTemplate: null,
@@ -166,6 +168,7 @@
                 that._inputWrapper.off(ns);
                 that._arrow.off();
                 that._arrow = null;
+                that._arrowIcon = null;
                 that.optionLabel.off();
             },
             open: function () {
@@ -180,18 +183,42 @@
                         that.filterInput.val('');
                         that._prev = '';
                     }
-                    that._filterSource();
+                    if (that.filterInput && that.options.minLength !== 1) {
+                        that.refresh();
+                        that.popup.one('activate', that._focusInputHandler);
+                        that.popup.open();
+                        that._resizeFilterInput();
+                    } else {
+                        that._filterSource();
+                    }
                 } else if (that._allowOpening()) {
                     that.popup.one('activate', that._focusInputHandler);
                     that.popup.open();
+                    that._resizeFilterInput();
                     that._focusItem();
                 }
             },
             _focusInput: function () {
                 this._focusElement(this.filterInput);
             },
+            _resizeFilterInput: function () {
+                var filterInput = this.filterInput;
+                var originalPrevent = this._prevent;
+                if (!filterInput) {
+                    return;
+                }
+                var isInputActive = this.filterInput[0] === activeElement();
+                var caret = kendo.caret(this.filterInput[0])[0];
+                this._prevent = true;
+                filterInput.css('display', 'none').css('width', this.popup.element.css('width')).css('display', 'inline-block');
+                if (isInputActive) {
+                    filterInput.focus();
+                    kendo.caret(filterInput[0], caret);
+                }
+                this._prevent = originalPrevent;
+            },
             _allowOpening: function () {
-                return this.hasOptionLabel() || this.filterInput || this.dataSource.view().length;
+                return this.hasOptionLabel() || this.filterInput || Select.fn._allowOpening.call(this);
             },
             toggle: function (toggle) {
                 this._toggle(toggle, true);
@@ -240,28 +267,31 @@
             },
             text: function (text) {
                 var that = this;
-                var dataItem, loweredText;
+                var loweredText;
                 var ignoreCase = that.options.ignoreCase;
                 text = text === null ? '' : text;
                 if (text !== undefined) {
-                    if (typeof text === 'string') {
-                        loweredText = ignoreCase ? text.toLowerCase() : text;
-                        that._select(function (data) {
-                            data = that._text(data);
-                            if (ignoreCase) {
-                                data = (data + '').toLowerCase();
-                            }
-                            return data === loweredText;
-                        });
-                        dataItem = that.dataItem();
-                        if (dataItem) {
-                            text = dataItem;
-                        }
+                    if (typeof text !== 'string') {
+                        that._textAccessor(text);
+                        return;
                     }
-                    that._textAccessor(text);
+                    loweredText = ignoreCase ? text.toLowerCase() : text;
+                    that._select(function (data) {
+                        data = that._text(data);
+                        if (ignoreCase) {
+                            data = (data + '').toLowerCase();
+                        }
+                        return data === loweredText;
+                    }).done(function () {
+                        that._textAccessor(that.dataItem() || text);
+                    });
                 } else {
                     return that._textAccessor();
                 }
+            },
+            _clearFilter: function () {
+                $(this.filterInput).val('');
+                Select.fn._clearFilter.call(this);
             },
             value: function (value) {
                 var that = this;
@@ -271,6 +301,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
+                that.requireValueMapper(that.options, value);
                 if (value || !that.hasOptionLabel()) {
                     that._initialIndex = null;
                 }
@@ -291,10 +322,6 @@
                     that._fetchData();
                 }
                 listView.value(value).done(function () {
-                    if (that.selectedIndex === -1 && that.text()) {
-                        that.text('');
-                        that._accessor('', -1);
-                    }
                     that._old = that._accessor();
                     that._oldIndex = that.selectedIndex;
                 });
@@ -355,11 +382,15 @@
                 }
                 var value = that.listView.value()[0];
                 var optionLabel = that._optionLabelDataItem();
+                var optionLabelValue = optionLabel && that._value(optionLabel);
                 if (value === undefined || value === null) {
                     value = '';
                 }
                 if (optionLabel) {
-                    optionLabel = '<option value="' + that._value(optionLabel) + '">' + that._text(optionLabel) + '</option>';
+                    if (optionLabelValue === undefined || optionLabelValue === null) {
+                        optionLabelValue = '';
+                    }
+                    optionLabel = '<option value="' + optionLabelValue + '">' + that._text(optionLabel) + '</option>';
                 }
                 that._options(data, optionLabel, value);
                 if (value !== List.unifyType(that._accessor(), typeof value)) {
@@ -374,6 +405,9 @@
                 var data = that.dataSource.flatView();
                 var dataItem;
                 that._presetValue = false;
+                that._renderFooter();
+                that._renderNoData();
+                that._toggleNoData(!data.length);
                 that._resizePopup(true);
                 that.popup.position();
                 that._buildOptions(data);
@@ -421,14 +455,9 @@
             },
             _focusoutHandler: function () {
                 var that = this;
-                var filtered = that._state === STATE_FILTER;
                 var isIFrame = window.self !== window.top;
-                var focusedItem = that._focus();
                 if (!that._prevent) {
                     clearTimeout(that._typingTimeout);
-                    if (filtered && focusedItem && !that.trigger('select', { item: focusedItem })) {
-                        that._select(focusedItem, !that.dataSource.view().length);
-                    }
                     if (support.mobileOS.ios && isIFrame) {
                         that._change();
                     } else {
@@ -498,6 +527,9 @@
                 if (altKey && key === keys.UP || key === keys.ESC) {
                     that._focusElement(that.wrapper);
                 }
+                if (that._state === STATE_FILTER && key === keys.ESC) {
+                    that._clearFilter();
+                }
                 if (key === keys.ENTER && that._typingTimeout && that.filterInput && isPopupVisible) {
                     e.preventDefault();
                     return;
@@ -516,14 +548,18 @@
                         that._lastItem();
                     }
                     if (handled) {
-                        if (that.trigger('select', { item: that._focus() })) {
+                        if (that.trigger('select', {
+                                dataItem: that._getElementDataItem(that._focus()),
+                                item: that._focus()
+                            })) {
                             that._focus(current);
                             return;
                         }
-                        that._select(that._focus(), true);
-                        if (!isPopupVisible) {
-                            that._blur();
-                        }
+                        that._select(that._focus(), true).done(function () {
+                            if (!isPopupVisible) {
+                                that._blur();
+                            }
+                        });
                     }
                 }
                 if (!altKey && !handled && that.filterInput) {
@@ -574,13 +610,21 @@
                 }
                 if (idx !== dataLength) {
                     oldFocusedItem = that._focus();
-                    that._select(normalizeIndex(startIndex + idx, dataLength));
-                    if (that.trigger('select', { item: that._focus() })) {
-                        that._select(oldFocusedItem);
-                    }
-                    if (!that.popup.visible()) {
-                        that._change();
-                    }
+                    that._select(normalizeIndex(startIndex + idx, dataLength)).done(function () {
+                        var done = function () {
+                            if (!that.popup.visible()) {
+                                that._change();
+                            }
+                        };
+                        if (that.trigger('select', {
+                                dataItem: that._getElementDataItem(that._focus()),
+                                item: that._focus()
+                            })) {
+                            that._select(oldFocusedItem).done(done);
+                        } else {
+                            done();
+                        }
+                    });
                 }
             },
             _keypress: function (e) {
@@ -611,17 +655,31 @@
                 Select.fn._popup.call(this);
                 this.popup.one('open', proxy(this._popupOpen, this));
             },
+            _getElementDataItem: function (element) {
+                if (!element || !element[0]) {
+                    return null;
+                }
+                if (element[0] === this.optionLabel[0]) {
+                    return this._optionLabelDataItem();
+                }
+                return this.listView.dataItemByIndex(this.listView.getElementIndex(element));
+            },
             _click: function (e) {
+                var that = this;
                 var item = e.item || $(e.currentTarget);
                 e.preventDefault();
-                if (this.trigger('select', { item: item })) {
-                    this.close();
+                if (that.trigger('select', {
+                        dataItem: that._getElementDataItem(item),
+                        item: item
+                    })) {
+                    that.close();
                     return;
                 }
-                this._userTriggered = true;
-                this._select(item);
-                this._focusElement(this.wrapper);
-                this._blur();
+                that._userTriggered = true;
+                that._select(item).done(function () {
+                    that._focusElement(that.wrapper);
+                    that._blur();
+                });
             },
             _focusElement: function (element) {
                 var active = activeElement();
@@ -637,17 +695,21 @@
                     this._focused = element.focus();
                 }
             },
-            _filter: function (word) {
-                if (word) {
-                    var that = this;
-                    var ignoreCase = that.options.ignoreCase;
-                    if (ignoreCase) {
-                        word = word.toLowerCase();
-                    }
-                    that._select(function (dataItem) {
-                        return that._matchText(that._text(dataItem), word);
-                    });
+            _searchByWord: function (word) {
+                if (!word) {
+                    return;
                 }
+                var that = this;
+                var ignoreCase = that.options.ignoreCase;
+                if (ignoreCase) {
+                    word = word.toLowerCase();
+                }
+                that._select(function (dataItem) {
+                    return that._matchText(that._text(dataItem), word);
+                });
+            },
+            _inputValue: function () {
+                return this.text();
             },
             _search: function () {
                 var that = this;
@@ -659,6 +721,7 @@
                         if (that._prev !== value) {
                             that._prev = value;
                             that.search(value);
+                            that._resizeFilterInput();
                         }
                         that._typingTimeout = null;
                     }, that.options.delay);
@@ -774,13 +837,14 @@
             _select: function (candidate, keepState) {
                 var that = this;
                 candidate = that._get(candidate);
-                that.listView.select(candidate);
-                if (!keepState && that._state === STATE_FILTER) {
-                    that._state = STATE_ACCEPT;
-                }
-                if (candidate === -1) {
-                    that._selectValue(null);
-                }
+                return that.listView.select(candidate).done(function () {
+                    if (!keepState && that._state === STATE_FILTER) {
+                        that._state = STATE_ACCEPT;
+                    }
+                    if (candidate === -1) {
+                        that._selectValue(null);
+                    }
+                });
             },
             _selectValue: function (dataItem) {
                 var that = this;
@@ -830,9 +894,10 @@
                     this.filterInput = null;
                 }
                 if (this._isFilterEnabled()) {
-                    icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
+                    icon = '<span class="k-icon k-i-zoom"></span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
+                        title: this.element.attr('title'),
                         role: 'listbox',
                         'aria-haspopup': true,
                         'aria-expanded': false
@@ -844,12 +909,13 @@
                 var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input', span;
                 span = wrapper.find(SELECTOR);
                 if (!span[0]) {
-                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input">&nbsp;</span><span unselectable="on" class="k-select"><span unselectable="on" class="k-icon k-i-arrow-s">select</span></span></span>').append(that.element);
+                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input">&nbsp;</span><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
                     span = wrapper.find(SELECTOR);
                 }
                 that.span = span;
                 that._inputWrapper = $(wrapper[0].firstChild);
-                that._arrow = wrapper.find('.k-icon');
+                that._arrow = wrapper.find('.k-select');
+                that._arrowIcon = that._arrow.find('.k-icon');
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMelement = element[0], wrapper;
@@ -859,7 +925,6 @@
                     wrapper[0].style.cssText = DOMelement.style.cssText;
                     wrapper[0].title = DOMelement.title;
                 }
-                element.hide();
                 that._focused = that.wrapper = wrapper.addClass('k-widget k-dropdown k-header').addClass(DOMelement.className).css('display', '').attr({
                     accesskey: element.attr('accesskey'),
                     unselectable: 'on',
@@ -867,6 +932,7 @@
                     'aria-haspopup': true,
                     'aria-expanded': false
                 });
+                element.hide().removeAttr('accesskey');
             },
             _clearSelection: function (parent) {
                 this.select(parent.value() ? 0 : -1);
@@ -890,35 +956,40 @@
             _textAccessor: function (text) {
                 var dataItem = null;
                 var template = this.valueTemplate;
-                var options = this.options;
-                var optionLabel = options.optionLabel;
+                var optionLabelText = this._optionLabelText();
                 var span = this.span;
-                if (text !== undefined) {
-                    if ($.isPlainObject(text) || text instanceof ObservableObject) {
-                        dataItem = text;
-                    } else if (optionLabel && this._optionLabelText() === text) {
-                        dataItem = optionLabel;
-                        template = this.optionLabelTemplate;
-                    }
-                    if (!dataItem) {
-                        dataItem = this._assignInstance(text, this._accessor());
-                    }
-                    var getElements = function () {
-                        return {
-                            elements: span.get(),
-                            data: [{ dataItem: dataItem }]
-                        };
-                    };
-                    this.angular('cleanup', getElements);
-                    try {
-                        span.html(template(dataItem));
-                    } catch (e) {
-                        span.html('');
-                    }
-                    this.angular('compile', getElements);
-                } else {
+                if (text === undefined) {
                     return span.text();
                 }
+                if ($.isPlainObject(text) || text instanceof ObservableObject) {
+                    dataItem = text;
+                } else if (optionLabelText && optionLabelText === text) {
+                    dataItem = this.options.optionLabel;
+                }
+                if (!dataItem) {
+                    dataItem = this._assignInstance(text, this._accessor());
+                }
+                if (this.hasOptionLabel()) {
+                    if (dataItem === optionLabelText || this._text(dataItem) === optionLabelText) {
+                        template = this.optionLabelTemplate;
+                        if (typeof this.options.optionLabel === 'string' && !this.options.optionLabelTemplate) {
+                            dataItem = optionLabelText;
+                        }
+                    }
+                }
+                var getElements = function () {
+                    return {
+                        elements: span.get(),
+                        data: [{ dataItem: dataItem }]
+                    };
+                };
+                this.angular('cleanup', getElements);
+                try {
+                    span.html(template(dataItem));
+                } catch (e) {
+                    span.html('');
+                }
+                this.angular('compile', getElements);
             },
             _preselect: function (value, text) {
                 if (!value && !text) {

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2016 Telerik AD                                                                                                                                                                            
+ * Copyright 2017 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.2.607'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.1.223'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -746,7 +746,7 @@
                         }
                     }
                     if (hasGroup) {
-                        number = groupInteger(number, start + (negative ? 1 : 0), Math.max(end, integerLength + start), numberFormat);
+                        number = groupInteger(number, start + (negative && !hasNegativeFormat ? 1 : 0), Math.max(end, integerLength + start), numberFormat);
                     }
                     if (end >= start) {
                         number += format.substring(end + 1);
@@ -805,7 +805,7 @@
                 value = Math.round(+(value[0] + 'e' + (value[1] ? +value[1] + precision : precision)));
                 value = value.toString().split('e');
                 value = +(value[0] + 'e' + (value[1] ? +value[1] - precision : -precision));
-                return value.toFixed(precision);
+                return value.toFixed(Math.min(precision, 20));
             };
             var toString = function (value, fmt, culture) {
                 if (fmt) {
@@ -838,19 +838,55 @@
                 }
             };
             kendo._round = round;
+            kendo._outerWidth = function (element, includeMargin) {
+                return $(element).outerWidth(includeMargin || false) || 0;
+            };
+            kendo._outerHeight = function (element, includeMargin) {
+                return $(element).outerHeight(includeMargin || false) || 0;
+            };
             kendo.toString = toString;
         }());
         (function () {
-            var nonBreakingSpaceRegExp = /\u00A0/g, exponentRegExp = /[eE][\-+]?[0-9]+/, shortTimeZoneRegExp = /[+|\-]\d{1,2}/, longTimeZoneRegExp = /[+|\-]\d{1,2}:?\d{2}/, dateRegExp = /^\/Date\((.*?)\)\/$/, offsetRegExp = /[+-]\d*/, formatsSequence = [
-                    'G',
-                    'g',
-                    'd',
-                    'F',
-                    'D',
-                    'y',
-                    'm',
-                    'T',
-                    't'
+            var nonBreakingSpaceRegExp = /\u00A0/g, exponentRegExp = /[eE][\-+]?[0-9]+/, shortTimeZoneRegExp = /[+|\-]\d{1,2}/, longTimeZoneRegExp = /[+|\-]\d{1,2}:?\d{2}/, dateRegExp = /^\/Date\((.*?)\)\/$/, offsetRegExp = /[+-]\d*/, FORMATS_SEQUENCE = [
+                    [],
+                    [
+                        'G',
+                        'g',
+                        'F'
+                    ],
+                    [
+                        'D',
+                        'd',
+                        'y',
+                        'm',
+                        'T',
+                        't'
+                    ]
+                ], STANDARD_FORMATS = [
+                    [
+                        'yyyy-MM-ddTHH:mm:ss.fffffffzzz',
+                        'yyyy-MM-ddTHH:mm:ss.fffffff',
+                        'yyyy-MM-ddTHH:mm:ss.fffzzz',
+                        'yyyy-MM-ddTHH:mm:ss.fff',
+                        'ddd MMM dd yyyy HH:mm:ss',
+                        'yyyy-MM-ddTHH:mm:sszzz',
+                        'yyyy-MM-ddTHH:mmzzz',
+                        'yyyy-MM-ddTHH:mmzz',
+                        'yyyy-MM-ddTHH:mm:ss',
+                        'yyyy-MM-dd HH:mm:ss',
+                        'yyyy/MM/dd HH:mm:ss'
+                    ],
+                    [
+                        'yyyy-MM-ddTHH:mm',
+                        'yyyy-MM-dd HH:mm',
+                        'yyyy/MM/dd HH:mm'
+                    ],
+                    [
+                        'yyyy/MM/dd',
+                        'yyyy-MM-dd',
+                        'HH:mm:ss',
+                        'HH:mm'
+                    ]
                 ], numberRegExp = {
                     2: /^\d{1,2}/,
                     3: /^\d{1,3}/,
@@ -1118,13 +1154,27 @@
                 offset = parseInt(offset.substr(0, 2), 10) * 60 + parseInt(offset.substring(2), 10);
                 return sign * offset;
             }
+            function getDefaultFormats(culture) {
+                var length = math.max(FORMATS_SEQUENCE.length, STANDARD_FORMATS.length);
+                var patterns = culture.calendar.patterns;
+                var cultureFormats, formatIdx, idx;
+                var formats = [];
+                for (idx = 0; idx < length; idx++) {
+                    cultureFormats = FORMATS_SEQUENCE[idx];
+                    for (formatIdx = 0; formatIdx < cultureFormats.length; formatIdx++) {
+                        formats.push(patterns[cultureFormats[formatIdx]]);
+                    }
+                    formats = formats.concat(STANDARD_FORMATS[idx]);
+                }
+                return formats;
+            }
             kendo.parseDate = function (value, formats, culture) {
                 if (objectToString.call(value) === '[object Date]') {
                     return value;
                 }
                 var idx = 0;
                 var date = null;
-                var length, patterns;
+                var length;
                 var tzoffset;
                 if (value && value.indexOf('/D') === 0) {
                     date = dateRegExp.exec(value);
@@ -1142,33 +1192,7 @@
                 }
                 culture = kendo.getCulture(culture);
                 if (!formats) {
-                    formats = [];
-                    patterns = culture.calendar.patterns;
-                    length = formatsSequence.length;
-                    for (; idx < length; idx++) {
-                        formats[idx] = patterns[formatsSequence[idx]];
-                    }
-                    idx = 0;
-                    formats = formats.concat([
-                        'yyyy/MM/dd HH:mm:ss',
-                        'yyyy/MM/dd HH:mm',
-                        'yyyy/MM/dd',
-                        'ddd MMM dd yyyy HH:mm:ss',
-                        'yyyy-MM-ddTHH:mm:ss.fffffffzzz',
-                        'yyyy-MM-ddTHH:mm:ss.fffzzz',
-                        'yyyy-MM-ddTHH:mm:sszzz',
-                        'yyyy-MM-ddTHH:mm:ss.fffffff',
-                        'yyyy-MM-ddTHH:mm:ss.fff',
-                        'yyyy-MM-ddTHH:mmzzz',
-                        'yyyy-MM-ddTHH:mmzz',
-                        'yyyy-MM-ddTHH:mm:ss',
-                        'yyyy-MM-ddTHH:mm',
-                        'yyyy-MM-dd HH:mm:ss',
-                        'yyyy-MM-dd HH:mm',
-                        'yyyy-MM-dd',
-                        'HH:mm:ss',
-                        'HH:mm'
-                    ]);
+                    formats = getDefaultFormats(culture);
                 }
                 formats = isArray(formats) ? formats : [formats];
                 length = formats.length;
@@ -1255,26 +1279,19 @@
             };
         }
         function wrap(element, autosize) {
-            var browser = support.browser, percentage, isRtl = element.css('direction') == 'rtl';
+            var browser = support.browser, percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight;
             if (!element.parent().hasClass('k-animation-container')) {
-                var shadows = getShadows(element), width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height);
-                if (browser.opera) {
-                    shadows.left = shadows.right = shadows.bottom = 5;
-                }
+                var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height);
                 percentage = percentWidth || percentHeight;
                 if (!percentWidth && (!autosize || autosize && width)) {
-                    width = element.outerWidth();
+                    width = outerWidth(element);
                 }
                 if (!percentHeight && (!autosize || autosize && height)) {
-                    height = element.outerHeight();
+                    height = outerHeight(element);
                 }
                 element.wrap($('<div/>').addClass('k-animation-container').css({
                     width: width,
-                    height: height,
-                    marginLeft: shadows.left * (isRtl ? 1 : -1),
-                    paddingLeft: shadows.left,
-                    paddingRight: shadows.right,
-                    paddingBottom: shadows.bottom
+                    height: height
                 }));
                 if (percentage) {
                     element.css({
@@ -1293,8 +1310,8 @@
                 percentage = percentRegExp.test(wrapperStyle.width) || percentRegExp.test(wrapperStyle.height);
                 if (!percentage) {
                     wrapper.css({
-                        width: element.outerWidth(),
-                        height: element.outerHeight(),
+                        width: outerWidth(element),
+                        height: outerHeight(element),
                         boxSizing: 'content-box',
                         mozBoxSizing: 'content-box',
                         webkitBoxSizing: 'content-box'
@@ -1324,7 +1341,7 @@
                 } else {
                     propInit = null;
                 }
-                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource) {
+                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource && propInit !== RegExp) {
                     if (propValue instanceof Date) {
                         destination[property] = new Date(propValue.getTime());
                     } else if (isFunction(propValue.clone)) {
@@ -1442,10 +1459,10 @@
                 support.tbodyInnerHtml = false;
             }
             support.touch = 'ontouchstart' in window;
-            support.msPointers = window.MSPointerEvent;
-            support.pointers = window.PointerEvent;
+            var docStyle = document.documentElement.style;
             var transitions = support.transitions = false, transforms = support.transforms = false, elementProto = 'HTMLElement' in window ? HTMLElement.prototype : [];
-            support.hasHW3D = 'WebKitCSSMatrix' in window && 'm11' in new window.WebKitCSSMatrix() || 'MozPerspective' in document.documentElement.style || 'msPerspective' in document.documentElement.style;
+            support.hasHW3D = 'WebKitCSSMatrix' in window && 'm11' in new window.WebKitCSSMatrix() || 'MozPerspective' in docStyle || 'msPerspective' in docStyle;
+            support.cssFlexbox = 'flexWrap' in docStyle || 'WebkitFlexWrap' in docStyle || 'msFlexWrap' in docStyle;
             each([
                 'Moz',
                 'webkit',
@@ -1540,7 +1557,6 @@
             };
             var mobileOS = support.mobileOS = support.detectOS(navigator.userAgent);
             support.wpDevicePixelRatio = mobileOS.wp ? screen.width / 320 : 0;
-            support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
             support.hasNativeScrolling = false;
             if (mobileOS.ios || mobileOS.android && mobileOS.majorVersion > 2 || mobileOS.wp) {
                 support.hasNativeScrolling = mobileOS;
@@ -1616,7 +1632,7 @@
                     return 1;
                 }
             };
-            support.cssBorderSpacing = typeof document.documentElement.style.borderSpacing != 'undefined' && !(support.browser.msie && support.browser.version < 8);
+            support.cssBorderSpacing = typeof docStyle.borderSpacing != 'undefined' && !(support.browser.msie && support.browser.version < 8);
             (function (browser) {
                 var cssClass = '', docElement = $(document.documentElement), majorVersion = parseInt(browser.version, 10);
                 if (browser.msie) {
@@ -1637,6 +1653,9 @@
                 }
                 if (support.mobileOS) {
                     cssClass += ' k-mobile';
+                }
+                if (!support.cssFlexbox) {
+                    cssClass += ' k-no-flexbox';
                 }
                 docElement.addClass(cssClass);
             }(support.browser));
@@ -1700,6 +1719,10 @@
             var documentMode = document.documentMode;
             support.hashChange = 'onhashchange' in window && !(support.browser.msie && (!documentMode || documentMode <= 8));
             support.customElements = 'registerElement' in window.document;
+            var chrome = support.browser.chrome;
+            support.msPointers = !chrome && window.MSPointerEvent;
+            support.pointers = !chrome && window.PointerEvent;
+            support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
         }());
         function size(obj) {
             var result = 0, key;
@@ -1714,10 +1737,17 @@
             if (!type) {
                 type = 'offset';
             }
-            var result = element[type]();
+            var offset = element[type]();
+            var result = {
+                top: offset.top,
+                right: offset.right,
+                bottom: offset.bottom,
+                left: offset.left
+            };
             if (support.browser.msie && (support.pointers || support.msPointers) && !positioned) {
-                result.top -= window.pageYOffset - document.documentElement.scrollTop;
-                result.left -= window.pageXOffset - document.documentElement.scrollLeft;
+                var sign = support.isRtl(element) ? 1 : -1;
+                result.top -= window.pageYOffset + sign * document.documentElement.scrollTop;
+                result.left -= window.pageXOffset + sign * document.documentElement.scrollLeft;
             }
             return result;
         }
@@ -2206,7 +2236,11 @@
                 value = parseOption(element, option);
                 if (value !== undefined) {
                     if (templateRegExp.test(option)) {
-                        value = kendo.template($('#' + value).html());
+                        if (typeof value === 'string') {
+                            value = kendo.template($('#' + value).html());
+                        } else {
+                            value = element.getAttribute(option);
+                        }
                     }
                     result[option] = value;
                 }
@@ -2932,6 +2966,21 @@
                 }
                 return last;
             }
+            function weekInYear(date, weekStart) {
+                var year, days;
+                date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                adjustDST(date, 0);
+                year = date.getFullYear();
+                if (weekStart !== undefined) {
+                    setDayOfWeek(date, weekStart, -1);
+                    date.setDate(date.getDate() + 4);
+                } else {
+                    date.setDate(date.getDate() + (4 - (date.getDay() || 7)));
+                }
+                adjustDST(date, 0);
+                days = Math.floor((date.getTime() - new Date(year, 0, 1, -6)) / 86400000);
+                return 1 + Math.floor(days / 7);
+            }
             function getDate(date) {
                 date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
                 adjustDST(date, 0);
@@ -3027,6 +3076,7 @@
                 toInvariantTime: toInvariantTime,
                 firstDayOfMonth: firstDayOfMonth,
                 lastDayOfMonth: lastDayOfMonth,
+                weekInYear: weekInYear,
                 getMilliseconds: getMilliseconds
             };
         }();
