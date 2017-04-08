@@ -77,41 +77,42 @@ namespace DynamicControls.Validation
                 if (valueControl != null)
                 {
                     dataValue = data.Children<JProperty>().FirstOrDefault(p => p.Name == child.Value<string>("name"));
-                    if (dataValue != null)
-                    {
-                        JObject dataObject = dataValue.First as JObject;
-                        if (dataObject != null)
-                        {
-                            CheckRoles(dataObject, child, errorList);
-                            dataObject.Add(new JProperty("checked", true));
-                        }
-                    }
-                    else
-                    {
-                        errorList.Add(new MissingDataError(child.Value<string>("name")));
-                    }
+                    CheckControl(dataValue, child, errorList);
                 }
                 IDynamicParentControl parentControl = control as IDynamicParentControl;
                 if (parentControl != null)
                 {
-                    JArray children = child.Value<JArray>("childs");
-                    if (children != null)
-                    {
-                        JObject anyChildren = children.OfType<JObject>().FirstOrDefault(c => c.Value<string>("key") == "any");
-                        if (anyChildren != null)
-                        {
-                            ValidateValues(anyChildren.Value<JArray>("controls"), data, errorList);
-                        }
-                        if (valueControl != null && dataValue != null)
-                        {
-                            JObject valueChildren = children.OfType<JObject>().FirstOrDefault(c => c.Value<string>("key") == dataValue.First.Value<string>("value"));
-                            if (valueChildren != null)
-                            {
-                                ValidateValues(valueChildren.Value<JArray>("controls"), data, errorList);
-                            }
-                        }
-                    }
+                    CheckChildren(child.Value<JArray>("childs"), dataValue, data, errorList);
                 }
+            }
+        }
+
+        /// <summary>
+        /// The check control.
+        /// </summary>
+        /// <param name="dataValue">
+        /// The data value.
+        /// </param>
+        /// <param name="child">
+        /// The child.
+        /// </param>
+        /// <param name="errorList">
+        /// The error list.
+        /// </param>
+        private static void CheckControl(JProperty dataValue, JObject child, ICollection<ValidationError> errorList)
+        {
+            if (dataValue != null)
+            {
+                JObject dataObject = dataValue.First as JObject;
+                if (dataObject != null)
+                {
+                    CheckRoles(dataObject, child, errorList);
+                    dataObject.Add(new JProperty("checked", true));
+                }
+            }
+            else
+            {
+                errorList.Add(new MissingDataError(child.Value<string>("name")));
             }
         }
 
@@ -135,6 +136,78 @@ namespace DynamicControls.Validation
                 if (roles.Value<bool>("required") && string.IsNullOrEmpty(dataObject.Value<string>("value")))
                 {
                     errorList.Add(new RequiredDataError(control.Value<string>("name")));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The check children.
+        /// </summary>
+        /// <param name="children">
+        /// The children.
+        /// </param>
+        /// <param name="dataValue">
+        /// The data value.
+        /// </param>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        /// <param name="errorList">
+        /// The error list.
+        /// </param>
+        private static void CheckChildren(JArray children, JProperty dataValue, JObject data, List<ValidationError> errorList)
+        {
+            if (children != null)
+            {
+                CheckAnyChildren(children, data, errorList);
+                CheckChildrenByValue(children, dataValue, data, errorList);
+            }
+        }
+
+        /// <summary>
+        /// The check any children.
+        /// </summary>
+        /// <param name="children">
+        /// The children.
+        /// </param>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        /// <param name="errorList">
+        /// The error list.
+        /// </param>
+        private static void CheckAnyChildren(JArray children, JObject data, List<ValidationError> errorList)
+        {
+            JObject anyChildren = children.OfType<JObject>().FirstOrDefault(c => c.Value<string>("key") == "any");
+            if (anyChildren != null)
+            {
+                ValidateValues(anyChildren.Value<JArray>("controls"), data, errorList);
+            }
+        }
+
+        /// <summary>
+        /// The check children by value.
+        /// </summary>
+        /// <param name="children">
+        /// The children.
+        /// </param>
+        /// <param name="dataValue">
+        /// The data value.
+        /// </param>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        /// <param name="errorList">
+        /// The error list.
+        /// </param>
+        private static void CheckChildrenByValue(JArray children, JProperty dataValue, JObject data, List<ValidationError> errorList)
+        {
+            if (dataValue != null)
+            {
+                JObject valueChildren = children.OfType<JObject>().FirstOrDefault(c => c.Value<string>("key") == dataValue.First.Value<string>("value"));
+                if (valueChildren != null)
+                {
+                    ValidateValues(valueChildren.Value<JArray>("controls"), data, errorList);
                 }
             }
         }

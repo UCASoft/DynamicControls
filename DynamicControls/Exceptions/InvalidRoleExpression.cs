@@ -13,6 +13,6 @@ namespace DynamicControls.Exceptions
         /// <param name="expression">
         /// The expression.
         /// </param>
-        public InvalidRoleExpression(string expression): base(string.Format("Expression '{0}' is invalid!", expression)) { }
+        public InvalidRoleExpression(string expression) : base(string.Format("Expression '{0}' is invalid!", expression)) { }
     }
 }
