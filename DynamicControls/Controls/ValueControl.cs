@@ -10,7 +10,7 @@ namespace DynamicControls.Controls
     /// <typeparam name="T">
     /// The type instance of BaseControl.
     /// </typeparam>
-    public abstract class ValueControl<T> : BaseControl<T>, IDynamicValueControl where T : BaseControl, new()
+    public abstract class ValueControl<T> : RenderControl<T>, IDynamicValueControl where T : BaseControl, new()
     {
         /// <summary>
         /// Gets the default value.

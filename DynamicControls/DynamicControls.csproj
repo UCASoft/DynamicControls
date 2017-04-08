@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\BaseControl.cs" />
+    <Compile Include="Controls\RenderControl.cs" />
     <Compile Include="Controls\AreaControl.cs" />
     <Compile Include="Controls\CheckBoxControl.cs" />
     <Compile Include="Controls\DataSourceControl.cs" />

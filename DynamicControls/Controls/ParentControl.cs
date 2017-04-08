@@ -10,7 +10,7 @@ namespace DynamicControls.Controls
     /// <typeparam name="T">
     /// The type instance of BaseControl.
     /// </typeparam>
-    public class ParentControl<T> : BaseControl<T>, IDynamicParentControl where T : BaseControl, new()
+    public class ParentControl<T> : RenderControl<T>, IDynamicParentControl where T : BaseControl, new()
     {
         /// <summary>
         /// Gets a value indicating whether inner children.

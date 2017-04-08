@@ -5,7 +5,7 @@ namespace DynamicControls.Controls
     /// <summary>
     /// The html box control.
     /// </summary>
-    public class HtmlBoxControl : BaseControl<HtmlBoxControl>
+    public class HtmlBoxControl : RenderControl<HtmlBoxControl>
     {
         /// <summary>
         /// The prepare body.
