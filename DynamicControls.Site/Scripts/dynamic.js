@@ -77,6 +77,14 @@ function inputChange(input) {
     loadChilds(control);
 }
 
+function textAreaChange(textArea) {
+    var $textArea = $(textArea);
+    var control = $textArea.closest(".dynamic-control");
+    control.attr("value", $textArea.val());
+    control.attr("text", $textArea.val());
+    loadChilds(control);
+}
+
 function getAreaData(areaName) {
     var area = $("#" + areaName + "[aria-dynamic = 'true']");
     var data = getChildData(area);

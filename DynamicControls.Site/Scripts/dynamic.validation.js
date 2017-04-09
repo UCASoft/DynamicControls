@@ -19,6 +19,14 @@
             return true;
         },
 
+        _checkTextArea: function(control, element) {
+            if (element.attr("required") && element.val() === "") {
+                this._setControlInvalid(control);
+                return false;
+            }
+            return true;
+        },
+
         _checkDiv: function(control, element) {
             var childElement = element.find("input").eq(0);
             var type = childElement.attr("type");
@@ -56,6 +64,8 @@
                         var element = $element[0];
                         if (element.tagName === "INPUT") {
                             result = self._checkInput(control, $element) && result;
+                        } else if (element.tagName === "TEXTAREA") {
+                            result = self._checkTextArea(control, $element) && result;
                         } else if (element.tagName === "DIV") {
                             result = self._checkDiv(control, $element) && result;
                         } else if (element.tagName === "SELECT") {

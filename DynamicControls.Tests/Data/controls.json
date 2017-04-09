@@ -6,6 +6,15 @@
       "key": "any",
       "controls": [
         {
+          "type": "TextArea",
+          "name": "multyline-field",
+          "label": "Data",
+          "rows": 5,
+          "checkedRoles": {
+            "required": true
+          }
+        },
+        {
           "type": "Input",
           "name": "name-field",
           "label": "Name",
@@ -33,7 +42,7 @@
                   "checkedRoles": {
                     "min": "now",
                     "max": "now+6months",
-                    "required":  true
+                    "required": true
                   }
                 }
               ]
@@ -46,7 +55,7 @@
                   "name": "select-field",
                   "dataSource": "121",
                   "label": "Time",
-                  "nullRow":  true,
+                  "nullRow": true,
                   "childs": [
                     {
                       "key": "2",
@@ -63,7 +72,7 @@
                     }
                   ],
                   "checkedRoles": {
-                    "required":  true
+                    "required": true
                   }
                 }
               ]
