@@ -58,7 +58,7 @@ function prepareDynamicBootstrapControl(control) {
                 if ($this.attr("type") === "checkbox") {
                     var parent = $this.closest(".form-group");
                     parent.removeClass("form-group").addClass("checkbox");
-		    var label = $("<label class='dynamic-checkbox'/>");
+		            var label = $("<label class='dynamic-checkbox'/>");
                     label.append($this);
                     var span = parent.children("span");
                     label.append(span.text());

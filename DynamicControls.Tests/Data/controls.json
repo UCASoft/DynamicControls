@@ -6,6 +6,11 @@
       "key": "any",
       "controls": [
         {
+          "type": "HtmlBox",
+          "name": "header-field",
+          "html": "<div style=\"color: blue;\"><h3>This is plain HTML data.</h3></div>"
+        },
+        {
           "type": "TextArea",
           "name": "multyline-field",
           "label": "Data",
