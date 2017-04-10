@@ -42,7 +42,7 @@
 }
 
 <h2>Dynamic Controls</h2>
-@(Html.DynamicControls(File.ReadAllText(@"controls.json")).RegisterDataSourceDelegate(DataSourceDelegate, "dataSource").RegisterGetTypeDelegate(GetTypeDelegate))
+@(Html.DynamicControls(File.ReadAllText(@"controls.json")).RegisterDataSourceDelegate(DataSourceDelegate, "dataSource").RegisterGetTypeDelegate(GetTypeDelegate).LoadData(File.ReadAllText(@"input.json")))
 
 <div class="row">
     <div class="col-lg-10 col-lg-offset-1">
